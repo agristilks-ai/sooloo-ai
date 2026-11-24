@@ -1,13 +1,15 @@
-# SOOLOO.AI
+# tilksweb
 
-Independent English-language media site for solopreneurs, plus a private editorial Studio.
+Independent English-language publication about practical AI for restaurants and commercial kitchens
+("AI for real kitchens"), written as Rusty, a working chef, plus the private editorial Studio.
+The repository and Cloudflare project keep their original name `sooloo-ai` (rebranded 2026-11-24).
 Hosted on Cloudflare Pages (project `sooloo-ai`), auto-deployed from `main`.
 
 ## What is where
 
 | Path | What it is |
 |---|---|
-| `public/` | Public static site (no build step). Articles in `app.js` are hard-coded samples. |
+| `public/` | Public static site (no build step): home, editorial policy, privacy. `noindex` until real articles exist. Brand: flame wordmark, colours #16120E / #231C16 / #F2A33A / #C2562B / #F3EADF, fonts Outfit, Barlow Condensed, Inter. |
 | `functions/api/subscribe.js` | Newsletter signup → D1 `subscribers`. **Legal/privacy workflow not finished.** |
 | `functions/studio.js` | Private Studio at `/studio`: login shell (GET) and authenticated JSON API (POST). |
 | `migrations/0001_studio_schema.sql` | Full current schema. Non-destructive (`IF NOT EXISTS` only). |

@@ -1,0 +1,5 @@
+body{margin:0;background:#16120e;color:#f3eadf;font:17px/1.65 Inter,system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:56px 24px 80px}
+.logo{display:inline-flex;align-items:flex-end;gap:2px;font:800 30px/.8 Outfit,system-ui,sans-serif;letter-spacing:-.045em;color:#f3eadf;text-decoration:none}
+h1{font:800 48px/1 'Barlow Condensed',system-ui,sans-serif;margin:40px 0 20px}
+p{color:#c4b6a4}a{color:#f2a33a}

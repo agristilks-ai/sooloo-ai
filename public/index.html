@@ -1,1 +1,145 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Independent intelligence for AI-powered entrepreneurs. Business breakdowns, tools and practical workflows."><title>SOOLOO.AI — Build solo. Scale with AI.</title><link rel="stylesheet" href="/style.css"></head><body><header><a class="logo" href="/">SOOLOO<span>.AI</span></a><button id="menu" aria-label="Toggle navigation" aria-expanded="false">Menu</button><nav id="nav"><a href="#insights" data-filter="All">Insights</a><a href="#insights" data-filter="Business">Business</a><a href="#insights" data-filter="Tools">AI Tools</a><a href="#insights" data-filter="Workflows">Workflows</a><a class="outline" href="#newsletter">Newsletter ↗</a></nav></header><main><section class="hero"><div class="hero-copy"><div class="eyebrow"><i></i> INDEPENDENT INTELLIGENCE / 001</div><h1>Build solo.<br><em>Scale with AI.</em></h1><p>Real business breakdowns, practical AI workflows and honest tool analysis for people building on their own terms.</p><a class="primary" href="#insights">Explore insights ↗</a><a class="secondary" href="#newsletter">Get the weekly signal →</a></div><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 500 430"><defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#23372b" stroke-width="1"/></pattern><linearGradient id="fade" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#39e58c" stop-opacity=".25"/><stop offset="1" stop-color="#39e58c" stop-opacity="0"/></linearGradient></defs><rect width="500" height="430" fill="url(#grid)"/><circle cx="250" cy="210" r="155" fill="none" stroke="#254636"/><circle cx="250" cy="210" r="120" fill="none" stroke="#254636" stroke-dasharray="4 8"/><circle cx="250" cy="210" r="85" fill="url(#fade)" stroke="#39e58c"/><path d="M250 55V365M95 210H405M140 100L360 320M360 100L140 320" stroke="#254636" stroke-dasharray="3 6"/><path d="M250 125L335 210L250 295L165 210Z" fill="#101e16" stroke="#39e58c" stroke-width="2"/><path d="M250 155L305 210L250 265L195 210Z" fill="#39e58c" fill-opacity=".12" stroke="#39e58c"/><circle cx="250" cy="210" r="9" fill="#39e58c"/><g fill="#39e58c"><circle cx="250" cy="55" r="4"/><circle cx="405" cy="210" r="4"/><circle cx="95" cy="210" r="4"/><circle cx="250" cy="365" r="4"/></g><g font-family="monospace" font-size="11" fill="#8da99a"><text x="20" y="28">SOOLOO / SIGNAL ENGINE</text><text x="20" y="410">RESEARCH → INSIGHT → ACTION</text></g></svg></div></section><div class="strip"><span>01 / BUSINESS BREAKDOWNS</span><span>02 / AI TOOLS</span><span>03 / PRACTICAL WORKFLOWS</span></div><section id="insights"><div class="section-head"><div><div class="eyebrow">THE EDITORIAL DESK</div><h2>Latest intelligence<span>.</span></h2></div><p>Less hype. More useful information.</p></div><div class="filters" id="filters" role="group" aria-label="Filter articles"></div><div id="articles" class="articles"></div></section><section id="newsletter" class="newsletter"><div><div class="eyebrow">THE WEEKLY SIGNAL</div><h2>One email.<br>Better decisions<span>.</span></h2><p>AI business insights, practical workflows and tool analysis in your inbox.</p></div><form id="subscribe"><label for="email">Email address</label><div class="form-row"><input id="email" name="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="primary" type="submit">Join the list ↗</button></div><label class="consent"><input type="checkbox" required> I agree to receive SOOLOO.AI emails and have read the <a href="/privacy.html">privacy notice</a>.</label><p id="status" role="status" aria-live="polite"></p></form></section></main><footer><a class="logo" href="/">SOOLOO<span>.AI</span></a><p>Independent AI business media. © 2026 SOOLOO.AI.</p><a href="/privacy.html">Privacy</a><a href="/editorial.html">Editorial policy</a></footer><dialog id="reader"><button id="close" aria-label="Close article">×</button><article id="article-body"></article></dialog><script src="/app.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>tilksweb — AI for real kitchens</title>
+<meta name="description" content="What AI really saves in a restaurant kitchen: inventory, deliveries, bookings, menus, staff and HACCP, tested by a working chef.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;800&amp;family=Outfit:wght@800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#16120e}
+a{color:#f3eadf;text-decoration:none}a:hover{color:#f2a33a}
+.stage{position:relative;width:min(100%,460px);aspect-ratio:1;perspective:900px;display:flex;align-items:center;justify-content:center}
+.ring{position:absolute;inset:0;border-radius:50%;transform-style:preserve-3d}
+.ring i{position:absolute;width:10px;height:10px;border-radius:50%;background:#ffd08a;box-shadow:0 0 14px #f2a33a;top:-5px;left:calc(50% - 5px)}
+.r1{border:2px solid rgba(242,163,58,.75);animation:spinA 14s linear infinite}
+.r2{inset:7%;border:1.5px solid rgba(194,86,43,.8);animation:spinB 19s linear infinite}
+.r3{inset:-6%;border:1px dashed rgba(243,234,223,.35);animation:spinC 26s linear infinite}
+.glow{position:absolute;inset:12%;border-radius:50%;background:radial-gradient(circle,rgba(242,163,58,.45),rgba(242,163,58,0) 65%);animation:pulse 4.5s ease-in-out infinite}
+.steam{position:absolute;bottom:18%;width:46px;height:160px;border-radius:50%;background:linear-gradient(to top,rgba(243,234,223,.28),rgba(243,234,223,0));filter:blur(14px);animation:rise 6s ease-in infinite;opacity:0}
+@keyframes spinA{from{transform:rotateX(68deg) rotateZ(0)}to{transform:rotateX(68deg) rotateZ(360deg)}}
+@keyframes spinB{from{transform:rotateY(64deg) rotateZ(0)}to{transform:rotateY(64deg) rotateZ(-360deg)}}
+@keyframes spinC{from{transform:rotateX(-30deg) rotateY(40deg) rotateZ(0)}to{transform:rotateX(-30deg) rotateY(40deg) rotateZ(360deg)}}
+@keyframes pulse{0%,100%{opacity:.55;transform:scale(.96)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes rise{0%{opacity:0;transform:translateY(40px) scaleX(.7)}30%{opacity:1}100%{opacity:0;transform:translateY(-220px) scaleX(1.4)}}
+@media (prefers-reduced-motion:reduce){.r1,.r2,.r3,.glow,.steam{animation:none}}
+</style>
+</head>
+<body>
+<div style="background:#16120e;color:#f3eadf;font-family:Inter,system-ui,sans-serif">
+  <header style="max-width:1280px;margin:0 auto;padding:22px 32px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between">
+    <a href="#top" aria-label="TilksWeb home" style="display:flex;align-items:flex-end;gap:2px">
+      <span style="font-family:Outfit,sans-serif;font-weight:800;font-size:32px;line-height:.8;letter-spacing:-.045em;color:#f3eadf">tilksweb</span>
+      <svg width="13" height="18" viewBox="0 0 20 27" aria-hidden="true" style="margin-bottom:1px"><path d="M10 0C14 7 19 11 19 17A9 9 0 0 1 1 17C1 13 4 10 6 8C6 12 8 13 10 13C9 9 9 4 10 0Z" fill="#f2a33a"/></svg>
+    </a>
+    <nav style="display:flex;flex-wrap:wrap;gap:26px;align-items:center;font-size:15px">
+      <a href="#topics">Topics</a><a href="#method">How we test</a><a href="#about">About</a>
+      <a href="#prep" style="background:#f2a33a;color:#16120e;font-weight:600;padding:11px 18px;border-radius:999px">Weekly Prep List</a>
+    </nav>
+  </header>
+
+  <section id="top" style="position:relative;overflow:hidden;border-top:1px solid #33291f;border-bottom:1px solid #33291f;background:radial-gradient(ellipse 65% 80% at 76% 45%,rgba(242,163,58,.34),rgba(22,18,14,0) 70%),radial-gradient(ellipse 50% 60% at 10% 100%,rgba(194,86,43,.18),rgba(22,18,14,0) 70%),#1d1712">
+    <div style="max-width:1280px;margin:0 auto;padding:96px 32px 104px;display:flex;flex-wrap:wrap;gap:56px;align-items:center">
+      <div style="flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:26px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.24em;font-size:15px;color:#f2a33a">FIELD NOTES FROM A WORKING KITCHEN</div>
+        <h1 style="margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(56px,8vw,112px);line-height:.9;letter-spacing:-.01em">AI for real<br>kitchens.</h1>
+        <p style="margin:0;font-size:20px;line-height:1.55;color:#c4b6a4;max-width:560px">Inventory, deliveries, bookings and menus. What AI really saves in a restaurant, tested by a chef on a real line, with the costs and the limits.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:14px">
+          <a href="#topics" style="background:#f2a33a;color:#16120e;font-weight:600;padding:15px 24px;border-radius:999px;font-size:16px">Read the field notes</a>
+          <a href="#prep" style="border:1px solid #4a3d31;padding:15px 24px;border-radius:999px;font-size:16px">Get the Weekly Prep List</a>
+        </div>
+      </div>
+      <figure id="about" style="flex:1 1 360px;margin:0;display:flex;flex-direction:column;align-items:center;gap:18px">
+        <div class="stage">
+          <div class="glow"></div>
+          <div class="ring r3"><i></i></div>
+          <div class="ring r1"><i></i></div>
+          <div class="ring r2"><i></i></div>
+          <img src="/img/portrait.png" alt="The chef behind TilksWeb" style="position:relative;width:66%;aspect-ratio:1;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #f2a33a,0 30px 120px rgba(242,163,58,.35)">
+          <span class="steam" style="left:30%;animation-delay:0s" aria-hidden="true"></span>
+          <span class="steam" style="left:48%;animation-delay:2s" aria-hidden="true"></span>
+          <span class="steam" style="left:64%;animation-delay:4s" aria-hidden="true"></span>
+        </div>
+        <figcaption style="text-align:center;font-size:15px;line-height:1.5;color:#c4b6a4;max-width:340px"><strong style="color:#f3eadf">Rusty · Chef</strong><br>Tests every tool on a real line before writing about it.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div style="background:#231c16;border-bottom:1px solid #33291f">
+    <div style="max-width:1280px;margin:0 auto;padding:18px 32px;display:flex;flex-wrap:wrap;gap:12px 34px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:17px;letter-spacing:.16em;color:#a89a8a">
+      <span>INVENTORY</span><span style="color:#c2562b">/</span><span>DELIVERIES</span><span style="color:#c2562b">/</span><span>BOOKINGS</span><span style="color:#c2562b">/</span><span>MENUS</span><span style="color:#c2562b">/</span><span>STAFF</span><span style="color:#c2562b">/</span><span>HACCP</span>
+    </div>
+  </div>
+
+  <div style="background:#f3eadf;color:#1d1712"><section id="topics" style="max-width:1280px;margin:0 auto;padding:96px 32px 96px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.24em;font-size:15px;color:#a3441f">THE STATIONS</div>
+    <h2 style="margin:12px 0 40px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:56px;line-height:1">Where AI earns its place.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px">
+      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">01</div>
+        <h3 style="margin:0;font-size:22px">Inventory &amp; food cost</h3>
+        <p style="margin:0;color:#5c4f42;line-height:1.55">Faster counts, live stock levels and plate costs that stay true when prices move.</p>
+      </article>
+      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">02</div>
+        <h3 style="margin:0;font-size:22px">Deliveries &amp; suppliers</h3>
+        <p style="margin:0;color:#5c4f42;line-height:1.55">Smarter orders, price checks across suppliers and invoices checked against what arrived.</p>
+      </article>
+      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">03</div>
+        <h3 style="margin:0;font-size:22px">Bookings &amp; guests</h3>
+        <p style="margin:0;color:#5c4f42;line-height:1.55">Table management, no-shows and knowing how many covers to prep for.</p>
+      </article>
+      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">04</div>
+        <h3 style="margin:0;font-size:22px">Menus &amp; recipes</h3>
+        <p style="margin:0;color:#5c4f42;line-height:1.55">Recipe cards, allergen labels and menu prices that protect the margin.</p>
+      </article>
+      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">05</div>
+        <h3 style="margin:0;font-size:22px">Staff &amp; scheduling</h3>
+        <p style="margin:0;color:#5c4f42;line-height:1.55">Rotas, onboarding and prep instructions new cooks actually follow.</p>
+      </article>
+      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">06</div>
+        <h3 style="margin:0;font-size:22px">HACCP &amp; paperwork</h3>
+        <p style="margin:0;color:#5c4f42;line-height:1.55">Temperature logs, cleaning records and inspections with less admin.</p>
+      </article>
+    </div>
+  </section></div>
+
+  <section id="method" style="max-width:1280px;margin:0 auto;padding:72px 32px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;border-top:1px solid #3a2f25;padding-top:48px">
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px">A real kitchen problem.</div><p style="margin:0;color:#b3a594;line-height:1.55">Every piece starts with something that costs time or money on a shift.</p></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px">Tested, not repeated.</div><p style="margin:0;color:#b3a594;line-height:1.55">We say clearly what we tried ourselves and what we only researched.</p></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px">Costs and limits.</div><p style="margin:0;color:#b3a594;line-height:1.55">Prices, setup time and where the tool falls short. Paid links always disclosed.</p></div>
+    </div>
+  </section>
+
+  <section id="prep" style="background:#231c16;border-top:1px solid #3a2f25;border-bottom:1px solid #3a2f25">
+    <div style="max-width:1280px;margin:0 auto;padding:80px 32px;display:flex;flex-wrap:wrap;gap:40px;align-items:center;justify-content:space-between">
+      <div style="flex:1 1 420px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.24em;font-size:15px;color:#f2a33a">THE WEEKLY PREP LIST</div>
+        <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:48px;line-height:1">One email. What worked in real kitchens this week.</h2>
+      </div>
+      <form style="flex:1 1 420px;display:flex;flex-direction:column;gap:10px">
+        <label for="email" style="font-size:14px;color:#b3a594">Email address</label>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <input id="email" type="email" placeholder="you@restaurant.com" style="flex:1 1 220px;background:#16120e;border:1px solid #4a3d31;border-radius:999px;padding:15px 20px;color:#f3eadf;font:inherit;font-size:16px">
+          <button type="button" style="background:#f2a33a;color:#16120e;font:inherit;font-weight:600;font-size:16px;border:0;border-radius:999px;padding:15px 24px">Opening soon</button>
+        </div>
+        <p style="margin:0;font-size:13px;color:#a89a8a">Signups open once the privacy notice and unsubscribe flow are ready.</p>
+      </form>
+    </div>
+  </section>
+
+  <footer style="max-width:1280px;margin:0 auto;padding:36px 32px;display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;font-size:14px;color:#a89a8a">
+    <span>© 2026 tilksweb · Independent AI field notes for hospitality</span>
+    <span style="display:flex;gap:22px"><a href="/editorial.html">Editorial policy</a><a href="/privacy.html">Privacy</a></span>
+  </footer>
+</div>
+</body>
+</html>

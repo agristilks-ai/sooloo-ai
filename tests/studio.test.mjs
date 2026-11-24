@@ -58,7 +58,7 @@ function mockFetch(handler) {
 const jsonRes = (status, body) => new Response(JSON.stringify(body), {status, headers: {'Content-Type': 'application/json'}});
 const VIDEO = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
 async function newDraft(e, extra = {}) {
-  const r = await post(e, {action: 'save', title: 'T', category: 'AI Tools', sourceUrl: VIDEO, research: 'Some transcript text', body: '', ...extra});
+  const r = await post(e, {action: 'save', title: 'T', category: 'Inventory & Food Cost', sourceUrl: VIDEO, research: 'Some transcript text', body: '', ...extra});
   assert.equal(r.status, 200); return r.data.id;
 }
 
@@ -67,7 +67,7 @@ test('GET serves the login shell with CSP and no data', async () => {
   assert.equal(r.status, 200);
   assert.match(r.headers.get('Content-Security-Policy'), /script-src 'nonce-/);
   const html = await r.text();
-  assert.match(html, /Studio v0\.10/);
+  assert.match(html, /Studio v0\.11/);
   // Client script must be valid JavaScript.
   const script = /<script nonce="[^"]+">([\s\S]*)<\/script>/.exec(html)[1];
   assert.doesNotThrow(() => new Function(script));
@@ -106,7 +106,7 @@ test('input validation: bad JSON, oversize, unsupported type, bad ids', async ()
 
 test('save with client newId is idempotent (retry does not duplicate the project)', async () => {
   const e = env(); const newId = crypto.randomUUID();
-  const body = {action: 'save', title: 'Hello', category: 'AI Tools', sourceUrl: '', research: 'r', body: '', newId};
+  const body = {action: 'save', title: 'Hello', category: 'Inventory & Food Cost', sourceUrl: '', research: 'r', body: '', newId};
   assert.equal((await post(e, body)).data.id, newId);
   assert.equal((await post(e, body)).data.id, newId);
   assert.equal((await post(e, {action: 'list'})).data.drafts.length, 1);
@@ -307,4 +307,11 @@ test('leading "Here is ..." preamble is removed from AI output', async () => {
   const id = await newDraft(e);
   const r = await post(e, {action: 'generate_asset', id, format: 'linkedin'});
   assert.equal(r.data.output, 'Real post text');
+});
+
+test('legacy draft categories can still be saved', async () => {
+  const e = env();
+  const r = await post(e, {action: 'save', title: 'Old', category: 'AI Workflows', sourceUrl: '', research: 'r', body: ''});
+  assert.equal(r.status, 200);
+  assert.equal((await post(e, {action: 'save', title: 'Bad', category: 'Nope', sourceUrl: '', research: 'r', body: ''})).status, 400);
 });
