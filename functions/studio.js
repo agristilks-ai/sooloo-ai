@@ -284,7 +284,7 @@ const FORMATS=['article','linkedin','newsletter','video','thread','short'];
 const CATEGORIES=['Business Stories','AI Tools','AI Workflows','Business Ideas','Build in Public','Newsletter'];
 const TEXT_MODEL='@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 const SPEECH_MODEL='@cf/openai/whisper-large-v3-turbo';
-const JSON_LIMIT=220000, AUDIO_LIMIT=2000000;
+const JSON_LIMIT=220000, AUDIO_LIMIT=2000000, EDITOR_LIMIT=60000, STORE_LIMIT=1500000;
 const LOCK_MS=180000, STARTING_STALE_MS=180000, TRANSCRIPT_CACHE_MS=7*24*3600*1000, PENDING_STALE_MS=6*3600*1000;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 // Non-destructive schema, mirrored in migrations/0001_studio_schema.sql.
@@ -367,11 +367,16 @@ async function callSupadata(env,endpoint,timeout){
   const r=body.result&&typeof body.result==='object'?body.result:body;
   const text=typeof r.content==='string'?r.content:Array.isArray(r.content)?r.content.map(x=>typeof x?.text==='string'?x.text:'').join(' '):'';
   if(!text.trim())return {kind:'error',status:422,error:'No speech or usable transcript was returned.',code:'empty'};
-  if(text.length>60000)return {kind:'error',status:413,error:'Transcript exceeds the current 60,000 character editor limit.',code:'too_long'};
+  if(text.length>STORE_LIMIT)return {kind:'error',status:413,error:'Transcript is larger than the storage limit.',code:'too_long'};
   return {kind:'done',text,lang:typeof r.lang==='string'?r.lang.slice(0,16):''};
 }
+// The full transcript is always stored (paid once); only the editor copy is size-limited.
+function deliver(jobId,text,lang,cached){
+  if(text.length>EDITOR_LIMIT)throw new HttpError(413,'Transcript retrieved and saved ('+text.length.toLocaleString('en')+' characters), but it is longer than the 60,000 character editor limit. Use a shorter video for now; splitting long transcripts is planned. Retrying this video will not be charged again.');
+  return {status:'completed',jobId,text,lang:lang||'',...(cached?{cached:true}:{})};
+}
 function jobResponse(job){
-  if(job.status==='completed')return {status:'completed',jobId:job.id,text:job.transcript,lang:job.lang||'',cached:true};
+  if(job.status==='completed')return deliver(job.id,job.transcript||'',job.lang,true);
   if(job.status==='failed')throw new HttpError(502,job.error||'Transcript job failed.');
   return {status:'pending',jobId:job.id};
 }
@@ -402,7 +407,7 @@ async function startTranscript(env,url,mode){
   if(r.kind==='done'){
     await db.prepare("UPDATE transcript_jobs SET status='completed',transcript=?,lang=?,updated_at=? WHERE id=?").bind(r.text,r.lang,nowIso(),id).run();
     await finishUsage(env,usage,'ok',{mode,chars:r.text.length});
-    return {status:'completed',jobId:id,text:r.text,lang:r.lang};
+    return deliver(id,r.text,r.lang,false);
   }
   const error=r.kind==='pending'?'Provider returned an unexpected pending state without a job ID.':r.error;
   await db.prepare("UPDATE transcript_jobs SET status='failed',error=?,updated_at=? WHERE id=?").bind(error,nowIso(),id).run();
@@ -418,7 +423,7 @@ async function pollTranscript(env,jobId){
   if(r.kind==='pending'||r.kind==='job'){await db.prepare('UPDATE transcript_jobs SET updated_at=? WHERE id=?').bind(nowIso(),jobId).run();return {status:'pending',jobId};}
   if(r.kind==='done'){
     await db.prepare("UPDATE transcript_jobs SET status='completed',transcript=?,lang=?,updated_at=? WHERE id=?").bind(r.text,r.lang,nowIso(),jobId).run();
-    return {status:'completed',jobId,text:r.text,lang:r.lang};
+    return deliver(jobId,r.text,r.lang,false);
   }
   // Network hiccups and rate limits keep the job pending so polling can resume later.
   if(r.code==='network'||r.status===429)throw new HttpError(r.status,r.error+' The job is kept; try again shortly.');

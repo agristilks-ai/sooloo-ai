@@ -230,3 +230,14 @@ test('outbound server fetches use a redirect mode the Workers runtime accepts', 
   const server = src.slice(src.indexOf('// Server side.'));
   assert.equal(/redirect:\s*'error'/.test(server), false);
 });
+
+test('long transcript is stored once and never charged again', async () => {
+  mockFetch(() => jsonRes(200, {content: 'word '.repeat(20000), lang: 'en'}));
+  const e = env();
+  const a = await post(e, {action: 'video_transcript', url: VIDEO, mode: 'native'});
+  assert.equal(a.status, 413); assert.match(a.data.error, /saved/);
+  const b = await post(e, {action: 'video_transcript', url: VIDEO, mode: 'native'});
+  assert.equal(b.status, 413);
+  assert.equal(fetchLog.length, 1);
+  assert.equal(e.DB.raw.prepare("SELECT length(transcript) n FROM transcript_jobs WHERE status='completed'").get().n, 100000);
+});
