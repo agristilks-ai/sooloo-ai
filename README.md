@@ -62,6 +62,6 @@ Every deploy is a Cloudflare Pages deployment: Pages → `sooloo-ai` → Deploym
 
 ## Known gaps (see audit)
 
-Newsletter collects emails before the privacy/legal workflow exists (decision pending). Admin access is a
+Newsletter signup is paused (returns "open soon", stores nothing) until privacy notice, double opt-in and unsubscribe exist; reopen with variable `NEWSLETTER_SIGNUPS_OPEN=true`. Admin access is a
 single long-lived key (Cloudflare Access recommended). No publishing flow, research engine, revision
 history, source versioning or transcript chunking yet.

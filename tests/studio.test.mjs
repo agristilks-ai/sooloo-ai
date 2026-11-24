@@ -211,3 +211,12 @@ test('migration file matches the runtime schema', () => {
   const sql = files.map(f => readFileSync(new URL('../migrations/' + f, import.meta.url), 'utf8')).join('\n').replace(/\s+/g, ' ');
   for (const s of SCHEMA) assert.ok(sql.includes(s.replace(/\s+/g, ' ')), 'missing in migrations: ' + s.slice(0, 60));
 });
+
+test('newsletter signup is paused unless explicitly reopened', async () => {
+  writeFileSync(join(dir, 'sub.mjs'), readFileSync(new URL('../functions/api/subscribe.js', import.meta.url)));
+  const {onRequestPost} = await import(join(dir, 'sub.mjs'));
+  const e = {DB: fakeD1()};
+  const req = () => new Request(ORIGIN + '/api/subscribe', {method: 'POST', headers: {'Content-Type': 'application/json', Origin: ORIGIN}, body: JSON.stringify({email: 'a@b.co', consent: true})});
+  const r = await onRequestPost({request: req(), env: e});
+  assert.equal(r.status, 503); assert.equal((await r.json()).paused, true); assert.equal(e.DB.writes, 0);
+});
