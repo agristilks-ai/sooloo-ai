@@ -1,4 +1,4 @@
-// SOOLOO Studio v0.8 — fail-closed administrator dashboard.
+// SOOLOO Studio v0.9 — fail-closed administrator dashboard.
 const headers = {
   'Cache-Control': 'private, no-store',
   'X-Content-Type-Options': 'nosniff',
@@ -37,14 +37,14 @@ function page(nonce) {
 <form id="draftForm" autocomplete="off">
 <label for="draftTitle">Title</label><input id="draftTitle" required maxlength="200">
 <label for="category">Category</label><select id="category"><option>Business Stories</option><option>AI Tools</option><option>AI Workflows</option><option>Business Ideas</option><option>Build in Public</option><option>Newsletter</option></select>
-<label for="sourceUrl">Source URL (optional)</label><input id="sourceUrl" type="url" maxlength="2000" placeholder="YouTube or Instagram video URL"><div class="actions"><button class="secondary" id="importLink" type="button">Import video info</button><button id="fetchTranscript" type="button">Get video transcript</button></div><p id="sourceMessage" class="status" role="status" aria-live="polite"></p><label for="transcriptMode">Transcript mode</label><select id="transcriptMode"><option value="native">Existing captions only (1 credit per request)</option><option value="auto">AI fallback when captions are absent (2 credits per generated minute)</option></select><p class="caption">Uses Supadata if configured. Public videos only; process sources you have permission to use. Review transcripts before generation. No paid plan is required to try the integration.</p><div class="panel"><div class="eyebrow">Audio to transcript</div><p>Transcribe an audio recording you own or have permission to process. MP3, WAV, M4A or OGG, up to 2 MB. Workers AI usage may incur charges. The audio is sent for transcription, not stored in D1.</p><label for="audioFile">Audio file</label><input id="audioFile" type="file" accept=".mp3,.wav,.m4a,.ogg,audio/*"><div class="actions"><button id="transcribeAudio" type="button">Transcribe with AI</button></div><p id="audioMessage" class="status" role="status" aria-live="polite"></p></div>
+<label for="sourceUrl">Source URL (optional)</label><input id="sourceUrl" type="url" maxlength="2000" placeholder="YouTube or Instagram video URL"><div class="actions"><button class="secondary" id="importLink" type="button">Import video info</button><button id="fetchTranscript" type="button">Get video transcript</button><button id="videoPackage" type="button">Create content package from video</button></div><p id="sourceMessage" class="status" role="status" aria-live="polite"></p><label for="transcriptMode">Transcript mode</label><select id="transcriptMode"><option value="native">Existing captions only (1 credit per request)</option><option value="auto">AI fallback when captions are absent (2 credits per generated minute)</option></select><p class="caption">Uses Supadata if configured. Public videos only; process sources you have permission to use. Review all generated drafts before publication. For a new project, Create content package from video retrieves the transcript, saves the source and generates six separate drafts. Nothing is published automatically.</p><div class="panel"><div class="eyebrow">Audio to transcript</div><p>Transcribe an audio recording you own or have permission to process. MP3, WAV, M4A or OGG, up to 2 MB. Workers AI usage may incur charges. The audio is sent for transcription, not stored in D1.</p><label for="audioFile">Audio file</label><input id="audioFile" type="file" accept=".mp3,.wav,.m4a,.ogg,audio/*"><div class="actions"><button id="transcribeAudio" type="button">Transcribe with AI</button></div><p id="audioMessage" class="status" role="status" aria-live="polite"></p></div>
 <label for="research">Research notes / transcript</label><textarea id="research" rows="7" maxlength="60000" placeholder="Paste source material you have permission to use."></textarea>
 <label for="transcriptFile">Import transcript file (.txt, .srt, .vtt)</label><input id="transcriptFile" type="file" accept=".txt,.srt,.vtt,text/plain,text/vtt,application/x-subrip"><p id="importMessage" class="status" role="status" aria-live="polite"></p><label for="articleBody">Original article draft</label><textarea id="articleBody" rows="9" maxlength="40000" placeholder="Your original analysis and findings."></textarea>
 <div class="actions"><button id="saveDraft" type="submit">Save private draft</button></div>
 </form><div class="actions"><button class="secondary" id="makeBrief" type="button">Create AI writing prompt</button><button class="secondary" id="copyBrief" type="button" disabled>Copy prompt</button></div>
 <label for="brief">Writing prompt (optional)</label><textarea id="brief" readonly rows="6" placeholder="Generate a prompt to use in ChatGPT or Claude."></textarea><p class="caption">Use the prompt manually, or generate a format directly below.</p><div class="panel" id="aiPanel"><div class="eyebrow">AI Content Engine</div><h2>Generate original content</h2><div class="panel"><div class="eyebrow">One-click content package</div><p>Generate the six missing formats from this source and save each one automatically. Existing library items are preserved. Up to six AI requests may incur usage charges. Nothing is published.</p><div class="actions"><button id="generateAll" type="button">Generate all missing formats</button><button id="stopBatch" type="button" class="secondary" disabled>Stop after current request</button></div><progress id="batchProgress" max="6" value="0" aria-label="Content package progress"></progress><p id="batchMessage" class="status" role="status" aria-live="polite"></p></div><label for="aiFormat">Output format</label><select id="aiFormat"><option value="article">SEO article</option><option value="linkedin">LinkedIn post</option><option value="newsletter">Newsletter</option><option value="video">YouTube video script</option><option value="thread">X thread</option><option value="short">Short video script</option></select><div class="actions"><button id="generateAI" type="button">Generate with AI</button><button class="secondary" id="copyAI" type="button" disabled>Copy output</button><button class="secondary" id="useAI" type="button" disabled>Use as article</button><button id="saveAI" type="button" disabled>Save output to library</button></div><label for="aiOutput">Generated content <span id="outputKind" class="caption"></span></label><textarea id="aiOutput" rows="12" maxlength="40000" placeholder="Your generated content will appear here."></textarea><p id="aiMessage" class="status" role="status" aria-live="polite"></p><p class="caption">Each generation uses Cloudflare Workers AI. Usage may incur charges. Review claims, attribution and originality before publishing. Save your editorial draft first. Each format can then be stored separately in your private content library. Saving the same format replaces its previous version.</p><div class="bar"><div><div class="eyebrow">Saved content library</div><h2>Outputs for this draft</h2></div><button class="secondary" id="refreshAssets" type="button">Refresh library</button></div><div class="actions" id="assetList"></div><p id="assetMessage" class="status" role="status" aria-live="polite"></p></div><p class="status" id="editorMessage" role="status" aria-live="polite"></p></article>
 <h2>Workspace roadmap</h2><div class="grid"><article class="panel"><h2>Newsletter</h2><p>Email delivery and consent management.</p><span class="coming">Not implemented</span></article><article class="panel"><h2>Affiliate Center</h2><p>Partner links and commission tracking.</p><span class="coming">Not implemented</span></article></div>
-<p id="dashboardMessage" class="status" role="status" aria-live="polite"></p><div class="foot">Studio v0.8 · Access key is held in memory only. Reloading the page signs you out.</div></section></main>
+<p id="dashboardMessage" class="status" role="status" aria-live="polite"></p><div class="foot">Studio v0.9 · Access key is held in memory only. Reloading the page signs you out.</div></section></main>
 <script nonce="${nonce}">
 (function(){
   'use strict';
@@ -73,7 +73,7 @@ function page(nonce) {
   }
   const fields=['draftTitle','category','sourceUrl','research','articleBody'];
   function resetAI(){batchGeneration++;batchBusy=false;batchStop=false;byId('generateAll').disabled=false;byId('stopBatch').disabled=true;byId('batchProgress').value=0;byId('batchMessage').textContent='';aiGeneration++;assetGeneration++;aiBusy=false;assetBusy=false;outputFormat='';byId('aiOutput').value='';byId('outputKind').textContent='';byId('aiMessage').textContent='';byId('assetList').replaceChildren();byId('assetMessage').textContent='Save a private draft to start its content library.';byId('generateAI').disabled=false;byId('refreshAssets').disabled=false;syncOutput();}
-  function clearDraft(){sourceGeneration++;sourceBusy=false;['importLink','fetchTranscript','transcriptMode','transcribeAudio','audioFile','newDraft','transcriptFile','generateAll','generateAI','refreshAssets'].forEach(id=>byId(id).disabled=false);byId('audioFile').value='';byId('audioMessage').textContent='';byId('sourceMessage').textContent='';importGeneration++;byId('transcriptFile').value='';byId('transcriptFile').disabled=false;byId('importMessage').textContent='';resetAI();draftId=null;fields.forEach(id=>{byId(id).disabled=false;byId(id).value=id==='category'?'Business Stories':'';});byId('brief').value='';byId('copyBrief').disabled=true;}
+  function clearDraft(){sourceGeneration++;sourceBusy=false;['importLink','fetchTranscript','videoPackage','transcriptMode','transcribeAudio','audioFile','newDraft','transcriptFile','generateAll','generateAI','refreshAssets'].forEach(id=>byId(id).disabled=false);byId('audioFile').value='';byId('audioMessage').textContent='';byId('sourceMessage').textContent='';importGeneration++;byId('transcriptFile').value='';byId('transcriptFile').disabled=false;byId('importMessage').textContent='';resetAI();draftId=null;fields.forEach(id=>{byId(id).disabled=false;byId(id).value=id==='category'?'Business Stories':'';});byId('brief').value='';byId('copyBrief').disabled=true;}
   function values(){return {id:draftId,title:byId('draftTitle').value.trim(),category:byId('category').value,sourceUrl:byId('sourceUrl').value.trim(),research:byId('research').value,body:byId('articleBody').value};}
   async function api(action,payload={}){
     const res=await fetch('/studio',{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':'application/json'},body:JSON.stringify({action,...payload}),cache:'no-store',credentials:'omit',redirect:'error'});
@@ -157,7 +157,7 @@ function page(nonce) {
     finally{if(seq===importGeneration)control.value='';}
   });
   function sourceAvailable(){return !!key&&!busy&&!batchBusy&&!aiBusy&&!assetBusy&&!sourceBusy;}
-  function lockSource(on){sourceBusy=on;['importLink','fetchTranscript','transcriptMode','transcribeAudio','audioFile','newDraft','saveDraft','generateAll','generateAI','transcriptFile','sourceUrl','research','draftTitle'].forEach(id=>byId(id).disabled=on);}
+  function lockSource(on){sourceBusy=on;['importLink','fetchTranscript','videoPackage','transcriptMode','transcribeAudio','audioFile','newDraft','saveDraft','generateAll','generateAI','transcriptFile','sourceUrl','research','draftTitle'].forEach(id=>byId(id).disabled=on);}
   byId('importLink').addEventListener('click',async()=>{
     if(!sourceAvailable())return;
     const url=byId('sourceUrl').value.trim(),msg=byId('sourceMessage'),seq=++sourceGeneration;
@@ -170,12 +170,12 @@ function page(nonce) {
     }catch(e){if(seq===sourceGeneration&&key)msg.textContent=e.message;}
     finally{if(seq===sourceGeneration)lockSource(false);}
   });
-  byId('fetchTranscript').addEventListener('click',async()=>{
-    if(!sourceAvailable())return;
+  async function fetchVideoTranscript(combined=false){
+    if(!sourceAvailable())return false;
     const url=byId('sourceUrl').value.trim(),mode=byId('transcriptMode').value,msg=byId('sourceMessage');
     if(!url){msg.textContent='Enter a YouTube or Instagram video link.';return;}
-    if(byId('research').value&&!confirm('Replace existing research with the imported transcript?'))return;
-    if(!confirm(mode==='auto'?'Send this public video URL to Supadata? AI fallback may consume 2 credits per minute.':'Send this public video URL to Supadata to retrieve existing captions (1 credit per request)?'))return;
+    if(!combined&&byId('research').value&&!confirm('Replace existing research with the imported transcript?'))return false;
+    if(!combined&&!confirm(mode==='auto'?'Send this public video URL to Supadata? AI fallback may consume 2 credits per minute.':'Send this public video URL to Supadata to retrieve existing captions (1 credit per request)?'))return false;
     const seq=++sourceGeneration,active=()=>seq===sourceGeneration&&!!key;
     lockSource(true);msg.textContent='Requesting transcript…';
     try{
@@ -198,8 +198,22 @@ function page(nonce) {
       byId('research').value=d.text;
       if(!byId('draftTitle').value)byId('draftTitle').value='Video research';
       msg.textContent='Transcript imported ('+d.text.length.toLocaleString()+' characters'+(d.lang?', '+d.lang:'')+'). '+(d.text.length>30000?'Split the text before generating content.':'Review the text, then generate your content package.');
-    }catch(e){if(active())msg.textContent=e.message;}
+      return true;
+    }catch(e){if(active())msg.textContent=e.message;return false;}
     finally{if(active())lockSource(false);}
+  }
+  byId('fetchTranscript').addEventListener('click',()=>fetchVideoTranscript(false));
+  byId('videoPackage').addEventListener('click',async()=>{
+    if(!sourceAvailable())return;
+    const d=values(),msg=byId('sourceMessage');
+    if(!d.sourceUrl){msg.textContent='Enter a YouTube or Instagram video link.';return;}
+    if(d.id||d.research.trim()||d.body.trim()||byId('aiOutput').value.trim()){msg.textContent='Start a new draft before creating a video package. Existing projects are protected.';return;}
+    if(!confirm('Retrieve this public video transcript via Supadata and generate up to six private content drafts with Workers AI? Both providers may charge usage. Confirm you have permission to process the source. Nothing will be published.'))return;
+    const session=key;
+    const ok=await fetchVideoTranscript(true);
+    if(!ok||!key||key!==session)return;
+    if(byId('research').value.length>30000){msg.textContent='Transcript imported, but exceeds the 30,000 character generation limit. Shorten or split it before generating.';return;}
+    await generatePackage(true);
   });
   byId('transcribeAudio').addEventListener('click',async()=>{
     if(!sourceAvailable())return;
@@ -219,17 +233,17 @@ function page(nonce) {
     finally{if(seq===sourceGeneration){lockSource(false);byId('audioFile').value='';}}
   });
   byId('stopBatch').addEventListener('click',()=>{batchStop=true;byId('stopBatch').disabled=true;byId('batchMessage').textContent='Stopping after the current request is saved…';});
-  byId('generateAll').addEventListener('click',async()=>{
+  async function generatePackage(combined=false){
     if(!key||batchBusy||busy||assetBusy||aiBusy||sourceBusy)return;
     const d=values(),msg=byId('batchMessage');
     if(!d.title||!(d.research.trim()||d.body.trim())){msg.textContent='Add a title and source transcript or research first.';return;}
     if(d.research.length+d.body.length>30000){msg.textContent='Use up to 30,000 combined characters; split longer sources.';return;}
     if(!byId('draftForm').reportValidity())return;
-    if(!confirm('Generate up to six missing formats and save them privately? AI usage may incur charges. Existing outputs will not be replaced.'))return;
+    if(!combined&&!confirm('Generate up to six missing formats and save them privately? AI usage may incur charges. Existing outputs will not be replaced.'))return;
     if(byId('aiOutput').value&&!confirm('The output preview may change. Continue?'))return;
     batchBusy=true;batchStop=false;const seq=++batchGeneration;
     const active=()=>seq===batchGeneration&&!!key;
-    const lock=['newDraft','saveDraft','transcriptFile','generateAI','generateAll','refreshAssets',...fields];
+    const lock=['newDraft','saveDraft','transcriptFile','generateAI','generateAll','refreshAssets','importLink','fetchTranscript','videoPackage','transcriptMode','transcribeAudio','audioFile',...fields];
     lock.forEach(id=>byId(id).disabled=true);byId('stopBatch').disabled=false;byId('batchProgress').value=0;syncOutput();
     let saved=0,skipped=0;const failed=[];
     try{
@@ -257,7 +271,8 @@ function page(nonce) {
       msg.textContent=(failed.length?'Paused after error. ':batchStop?'Stopped. ':'Package finished. ')+saved+' generated and saved; '+skipped+' existing preserved. '+(failed.length?failed.join('; ')+'. Click Generate all missing formats to resume.':'');
     }catch(e){if(active())msg.textContent='Package stopped: '+e.message+' . Saved outputs are retained.';}
     finally{if(active()){batchBusy=false;lock.forEach(id=>byId(id).disabled=false);byId('stopBatch').disabled=true;syncOutput();}}
-  });
+  }
+  byId('generateAll').addEventListener('click',()=>generatePackage(false));
   form.addEventListener('submit',e=>{e.preventDefault();const candidate=input.value.trim();input.value='';load(candidate,true);});
   byId('refresh').addEventListener('click',()=>{if(key)load(key,false);});
   byId('logout').addEventListener('click',()=>signOut());
