@@ -3,7 +3,7 @@
 Independent English-language publication about practical AI for restaurants and commercial kitchens
 ("AI for real kitchens"), written as Rusty, a working chef, plus the private editorial Studio.
 The repository and Cloudflare project keep their original name `sooloo-ai` (rebranded 2026-11-24).
-Hosted on Cloudflare Pages (project `sooloo-ai`), auto-deployed from `main`.
+Live at https://tilksweb.com (and www.tilksweb.com; domain bought via Cloudflare Registrar 2026-11-24, auto-renews yearly). Hosted on Cloudflare Pages (project `sooloo-ai`, also https://sooloo-ai.pages.dev), auto-deployed from `main`. Studio: https://tilksweb.com/studio
 
 ## What is where
 
