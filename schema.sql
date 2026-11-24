@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS subscribers (email TEXT PRIMARY KEY, consented_at TEXT NOT NULL);
