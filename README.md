@@ -12,3 +12,6 @@ Confirm domain and trademark status; finalize legal controller/contact details, 
 
 ## Newsletter deployment check
 After creating the `subscribers` table and setting the production D1 binding `DB` to `sooloo-db`, deploy the latest main commit. Verify with a test email and confirm the record in D1 before enabling public signup. A successful deployment alone does not confirm database persistence or email delivery.
+
+## Studio deployment
+Set `STUDIO_ADMIN_TOKEN` as a production Cloudflare Pages Secret containing 64 lowercase hexadecimal characters generated from 32 random bytes. Redeploy and open `/studio`. The login shell is public; the subscriber count requires a valid bearer key. Verify login, rejection of an incorrect key, sign-out and the D1 count. Never commit the secret. Content editing and newsletter delivery are not implemented in Studio v0.1.
