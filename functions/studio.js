@@ -352,8 +352,8 @@ async function runGeneration(env,input,operation){
 // ---- Supadata transcripts --------------------------------------------------
 async function callSupadata(env,endpoint,timeout){
   let res;
-  try{res=await fetch(endpoint,{headers:{'x-api-key':env.SUPADATA_API_KEY,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(timeout)});}
-  catch{return {kind:'error',status:502,error:'Transcript provider unavailable or timed out.',code:'network'};}
+  try{res=await fetch(endpoint,{headers:{'x-api-key':env.SUPADATA_API_KEY,Accept:'application/json'},redirect:'manual',signal:AbortSignal.timeout(timeout)});}
+  catch(e){return {kind:'error',status:502,error:'Transcript provider unavailable or timed out.',code:'network',detail:String(e?.name||'')+': '+String(e?.message||e).slice(0,200)};}
   let body=null;try{body=await res.json();}catch{}
   const code=typeof body?.error==='string'?body.error.slice(0,60):'';
   if(res.status===206)return {kind:'error',status:422,error:'No existing captions found for this video. Choose AI fallback only if you accept its credit cost.',code:code||'206'};
@@ -406,7 +406,7 @@ async function startTranscript(env,url,mode){
   }
   const error=r.kind==='pending'?'Provider returned an unexpected pending state without a job ID.':r.error;
   await db.prepare("UPDATE transcript_jobs SET status='failed',error=?,updated_at=? WHERE id=?").bind(error,nowIso(),id).run();
-  await finishUsage(env,usage,'error',{mode,code:r.code||'pending'});
+  await finishUsage(env,usage,'error',{mode,code:r.code||'pending',detail:r.detail||''});
   throw new HttpError(r.status||502,error);
 }
 async function pollTranscript(env,jobId){
@@ -510,7 +510,7 @@ export async function onRequest({request,env}) {
         let id=host==='youtu.be'?u.pathname.split('/')[1]:u.pathname==='/watch'?u.searchParams.get('v'):(/^\/(shorts|live|embed)\//.test(u.pathname)?u.pathname.split('/')[2]:null);
         if(!id||!/^[A-Za-z0-9_-]{11}$/.test(id))return json({error:'Invalid YouTube video link.'},400);
         const url='https://www.youtube.com/watch?v='+id;
-        try{const res=await fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent(url),{redirect:'error',signal:AbortSignal.timeout(8000)});
+        try{const res=await fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent(url),{redirect:'manual',signal:AbortSignal.timeout(8000)});
           if(!res.ok)return json({url,message:'Video link saved in the editor. Metadata unavailable; add a transcript or authorized audio.'});
           const m=await res.json();
           return json({url,title:typeof m.title==='string'?m.title.slice(0,200):'',author:typeof m.author_name==='string'?m.author_name.slice(0,160):'',message:'Metadata imported; video speech was not retrieved. Import a transcript or authorized audio to generate grounded content.'});

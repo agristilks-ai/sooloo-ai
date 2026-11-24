@@ -49,7 +49,11 @@ function post(e, body, {token = TOKEN, origin = ORIGIN, headers = {}} = {}) {
 let fetchLog = [];
 function mockFetch(handler) {
   fetchLog = [];
-  globalThis.fetch = async (url, init) => { fetchLog.push(String(url)); return handler(String(url), init); };
+  globalThis.fetch = async (url, init) => {
+    // Cloudflare Workers reject redirect:'error' before sending anything; mirror that here.
+    if (init?.redirect && !['follow', 'manual'].includes(init.redirect)) throw new TypeError('Invalid redirect value');
+    fetchLog.push(String(url)); return handler(String(url), init);
+  };
 }
 const jsonRes = (status, body) => new Response(JSON.stringify(body), {status, headers: {'Content-Type': 'application/json'}});
 const VIDEO = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
@@ -219,4 +223,10 @@ test('newsletter signup is paused unless explicitly reopened', async () => {
   const req = () => new Request(ORIGIN + '/api/subscribe', {method: 'POST', headers: {'Content-Type': 'application/json', Origin: ORIGIN}, body: JSON.stringify({email: 'a@b.co', consent: true})});
   const r = await onRequestPost({request: req(), env: e});
   assert.equal(r.status, 503); assert.equal((await r.json()).paused, true); assert.equal(e.DB.writes, 0);
+});
+
+test('outbound server fetches use a redirect mode the Workers runtime accepts', () => {
+  const src = readFileSync(new URL('../functions/studio.js', import.meta.url), 'utf8');
+  const server = src.slice(src.indexOf('// Server side.'));
+  assert.equal(/redirect:\s*'error'/.test(server), false);
 });
