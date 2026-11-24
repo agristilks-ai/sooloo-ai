@@ -1,4 +1,4 @@
-// SOOLOO Studio v0.7 — fail-closed administrator dashboard.
+// SOOLOO Studio v0.8 — fail-closed administrator dashboard.
 const headers = {
   'Cache-Control': 'private, no-store',
   'X-Content-Type-Options': 'nosniff',
@@ -30,7 +30,7 @@ function page(nonce) {
 <section id="login"><h1>Studio access.</h1><p>Sign in with your private administrator access key.</p>
 <form class="panel login" id="form" autocomplete="off"><label for="key">Administrator access key</label><input id="key" type="password" autocomplete="off" required minlength="64" maxlength="64" spellcheck="false" autocapitalize="off"><button id="submit" type="submit">Unlock Studio</button><p class="status" id="message" role="status" aria-live="polite"></p></form></section>
 <section id="dashboard" hidden><div class="bar"><div><h1>Overview.</h1><p>Manage your independent media business.</p></div><div class="actions"><button class="secondary" id="refresh" type="button">Refresh</button><button class="secondary" id="logout" type="button">Sign out</button></div></div>
-<div class="grid"><article class="panel"><div class="eyebrow">Newsletter</div><div class="number" id="total">—</div><div class="caption">Stored subscriber records, including test signups. Not verified email recipients.</div></article><article class="panel"><div class="eyebrow">Database</div><h2 id="dbState">—</h2><div class="caption">Live D1 query status</div></article></div>
+<div class="grid"><article class="panel"><div class="eyebrow">Newsletter</div><div class="number" id="total">—</div><div class="caption">Stored subscriber records, including test signups. Not verified email recipients.</div></article><article class="panel"><div class="eyebrow">Database</div><h2 id="dbState">—</h2><div class="caption">Live D1 query status</div></article><article class="panel"><div class="eyebrow">Video Transcripts</div><h2 id="supadataState">—</h2><div class="caption">Supadata API key configuration; not a live provider test.</div></article><article class="panel"><div class="eyebrow">Content AI</div><h2 id="aiState">—</h2><div class="caption">Workers AI binding configuration; not a live generation test.</div></article></div>
 <article class="panel" id="editor"><div class="bar"><div><div class="eyebrow">Content Factory / Article Editor</div><h2>Editorial drafts</h2></div><button class="secondary" id="newDraft" type="button">New draft</button></div>
 <p>Save research notes, transcripts and original articles privately. Nothing is published automatically.</p>
 <div id="draftList"></div><p class="caption">Showing up to 100 most recently updated drafts.</p>
@@ -44,7 +44,7 @@ function page(nonce) {
 </form><div class="actions"><button class="secondary" id="makeBrief" type="button">Create AI writing prompt</button><button class="secondary" id="copyBrief" type="button" disabled>Copy prompt</button></div>
 <label for="brief">Writing prompt (optional)</label><textarea id="brief" readonly rows="6" placeholder="Generate a prompt to use in ChatGPT or Claude."></textarea><p class="caption">Use the prompt manually, or generate a format directly below.</p><div class="panel" id="aiPanel"><div class="eyebrow">AI Content Engine</div><h2>Generate original content</h2><div class="panel"><div class="eyebrow">One-click content package</div><p>Generate the six missing formats from this source and save each one automatically. Existing library items are preserved. Up to six AI requests may incur usage charges. Nothing is published.</p><div class="actions"><button id="generateAll" type="button">Generate all missing formats</button><button id="stopBatch" type="button" class="secondary" disabled>Stop after current request</button></div><progress id="batchProgress" max="6" value="0" aria-label="Content package progress"></progress><p id="batchMessage" class="status" role="status" aria-live="polite"></p></div><label for="aiFormat">Output format</label><select id="aiFormat"><option value="article">SEO article</option><option value="linkedin">LinkedIn post</option><option value="newsletter">Newsletter</option><option value="video">YouTube video script</option><option value="thread">X thread</option><option value="short">Short video script</option></select><div class="actions"><button id="generateAI" type="button">Generate with AI</button><button class="secondary" id="copyAI" type="button" disabled>Copy output</button><button class="secondary" id="useAI" type="button" disabled>Use as article</button><button id="saveAI" type="button" disabled>Save output to library</button></div><label for="aiOutput">Generated content <span id="outputKind" class="caption"></span></label><textarea id="aiOutput" rows="12" maxlength="40000" placeholder="Your generated content will appear here."></textarea><p id="aiMessage" class="status" role="status" aria-live="polite"></p><p class="caption">Each generation uses Cloudflare Workers AI. Usage may incur charges. Review claims, attribution and originality before publishing. Save your editorial draft first. Each format can then be stored separately in your private content library. Saving the same format replaces its previous version.</p><div class="bar"><div><div class="eyebrow">Saved content library</div><h2>Outputs for this draft</h2></div><button class="secondary" id="refreshAssets" type="button">Refresh library</button></div><div class="actions" id="assetList"></div><p id="assetMessage" class="status" role="status" aria-live="polite"></p></div><p class="status" id="editorMessage" role="status" aria-live="polite"></p></article>
 <h2>Workspace roadmap</h2><div class="grid"><article class="panel"><h2>Newsletter</h2><p>Email delivery and consent management.</p><span class="coming">Not implemented</span></article><article class="panel"><h2>Affiliate Center</h2><p>Partner links and commission tracking.</p><span class="coming">Not implemented</span></article></div>
-<p id="dashboardMessage" class="status" role="status" aria-live="polite"></p><div class="foot">Studio v0.7 · Access key is held in memory only. Reloading the page signs you out.</div></section></main>
+<p id="dashboardMessage" class="status" role="status" aria-live="polite"></p><div class="foot">Studio v0.8 · Access key is held in memory only. Reloading the page signs you out.</div></section></main>
 <script nonce="${nonce}">
 (function(){
   'use strict';
@@ -53,7 +53,7 @@ function page(nonce) {
   const form=byId('form'), input=byId('key'), submit=byId('submit');
   function signOut(message=''){
     editorGeneration++; busy=false; clearDraft(); byId('draftList').replaceChildren(); byId('editorMessage').textContent=''; byId('saveDraft').disabled=false; generation++; if(pending)pending.abort(); pending=null; key=''; input.value=''; submit.disabled=false; byId('refresh').disabled=false;
-    byId('total').textContent='—';byId('dbState').textContent='—';byId('dashboardMessage').textContent='';
+    byId('total').textContent='—';byId('dbState').textContent='—';byId('supadataState').textContent='—';byId('aiState').textContent='—';byId('dashboardMessage').textContent='';
     byId('dashboard').hidden=true;byId('login').hidden=false;byId('message').textContent=message;
   }
   async function load(candidate, signingIn){
@@ -66,9 +66,9 @@ function page(nonce) {
       if(current!==generation)return;
       if(!response.ok){if(response.status===401){signOut('Invalid access key.');return;}throw Error(data.error||'Studio unavailable.');}
       if(!Number.isSafeInteger(data.total)||data.total<0)throw Error('Unexpected database response.');
-      key=candidate;input.value='';byId('total').textContent=String(data.total);byId('dbState').textContent='Connected';
+      key=candidate;input.value='';byId('total').textContent=String(data.total);byId('dbState').textContent='Connected';byId('supadataState').textContent=data.integrations?.supadata?'Configured':'Not configured';byId('aiState').textContent=data.integrations?.workersAI?'Configured':'Not configured';
       byId('login').hidden=true;byId('dashboard').hidden=false;byId('dashboardMessage').textContent='Updated '+new Date().toLocaleTimeString();status===byId('message')&&(status.textContent=''); if(signingIn)listDrafts();
-    }catch(e){if(current===generation){status.textContent=e.message||'Connection failed.';if(!signingIn){byId('total').textContent='—';byId('dbState').textContent='Unavailable';}}}
+    }catch(e){if(current===generation){status.textContent=e.message||'Connection failed.';if(!signingIn){byId('total').textContent='—';byId('dbState').textContent='Unavailable';byId('supadataState').textContent='Unknown';byId('aiState').textContent='Unknown';}}}
     finally{if(current===generation){submit.disabled=false;byId('refresh').disabled=false;pending=null;}}
   }
   const fields=['draftTitle','category','sourceUrl','research','articleBody'];
@@ -418,6 +418,6 @@ export async function onRequest({request,env}) {
     }
     const row=await env.DB.prepare('SELECT COUNT(*) AS total FROM subscribers').first();
     if(!Number.isSafeInteger(row?.total)||row.total<0)throw Error('Unexpected count');
-    return json({total:row.total});
+    return json({total:row.total,integrations:{supadata:typeof env.SUPADATA_API_KEY==='string'&&!!env.SUPADATA_API_KEY.trim(),workersAI:!!env.AI&&typeof env.AI.run==='function'}});
   } catch {return json({error:'Database query failed.'},500);}
 }
