@@ -1,0 +1,14 @@
+name: tests
+on:
+  push:
+  pull_request:
+jobs:
+  studio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check functions/studio.js && node --check functions/api/subscribe.js
+      - run: node --test tests/studio.test.mjs
