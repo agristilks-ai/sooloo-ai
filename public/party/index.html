@@ -51,6 +51,7 @@ td.big{font:800 22px 'Barlow Condensed',sans-serif}
 html,body{overflow-x:hidden}
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .ing input{min-width:0}
+.lbl{margin-bottom:2px}.lbl span{font-size:12px;color:var(--muted);font-weight:600}
 @media (max-width:560px){main{padding:8px 14px 60px}.step{padding:18px 14px}.dish{padding:12px}.ing{grid-template-columns:minmax(0,1fr) 82px 36px}th,td{padding:8px 4px;font-size:14px}td.big{font-size:19px}textarea{font-size:12px}}
 footer{max-width:1100px;margin:0 auto;padding:30px 24px;color:#a89a8a;font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 @media print{
@@ -191,15 +192,17 @@ function render(){
     head.append(cn,st);sec.append(head);
     course.dishes.forEach((d,di)=>{
       const card=el('div',{class:'dish'});
-      const top=el('div',{class:'ing',style:'grid-template-columns:minmax(0,1fr) 96px 36px'});
-      const dn=el('input',{type:'text',value:d.name,placeholder:'Dish, e.g. Beef fillet','aria-label':'Dish name'});dn.addEventListener('input',()=>{d.name=dn.value;});
-      const dc=el('input',{type:'number',min:'0',step:'1',inputmode:'numeric',value:d.count===''?'':String(d.count),placeholder:'Ordered','aria-label':'How many ordered '+(d.name||'this dish')});dc.addEventListener('input',()=>{d.count=dc.value===''?'':Number(dc.value);updateStatus();});
+      const l1=el('div',{class:'ing lbl'});l1.append(el('span',{},'Dish'),el('span',{},'Ordered'),el('span'));card.append(l1);
+      const top=el('div',{class:'ing'});
+      const dn=el('input',{type:'text',value:d.name,placeholder:'e.g. Beef','aria-label':'Dish name'});dn.addEventListener('input',()=>{d.name=dn.value;});
+      const dc=el('input',{type:'number',min:'0',step:'1',inputmode:'numeric',value:d.count===''?'':String(d.count),placeholder:'0','aria-label':'How many ordered '+(d.name||'this dish')});dc.addEventListener('input',()=>{d.count=dc.value===''?'':Number(dc.value);updateStatus();});
       const rm=el('button',{type:'button','aria-label':'Remove dish'},'×');rm.addEventListener('click',()=>{course.dishes.splice(di,1);if(!course.dishes.length)course.dishes.push(blankDish());render();});
       top.append(dn,dc,rm);card.append(top);
+      const l2=el('div',{class:'ing lbl',style:'margin-top:6px'});l2.append(el('span',{},'Buy (ingredient)'),el('span',{},'g / portion'),el('span'));card.append(l2);
       d.items.forEach((it,ii)=>{
         const row=el('div',{class:'ing'});
-        const nm=el('input',{type:'text',value:it.name,placeholder:'Ingredient to buy','aria-label':'Ingredient to buy for '+(d.name||'this dish')});nm.addEventListener('input',()=>{it.name=nm.value;});
-        const gr=el('input',{type:'number',min:'0',step:'1',inputmode:'numeric',value:it.grams===''?'':String(it.grams),placeholder:'g / portion','aria-label':'Grams per portion'});gr.addEventListener('input',()=>{it.grams=gr.value===''?'':Number(gr.value);});
+        const nm=el('input',{type:'text',value:it.name,placeholder:'e.g. Beef fillet','aria-label':'Ingredient to buy for '+(d.name||'this dish')});nm.addEventListener('input',()=>{it.name=nm.value;});
+        const gr=el('input',{type:'number',min:'0',step:'1',inputmode:'numeric',value:it.grams===''?'':String(it.grams),placeholder:'g','aria-label':'Grams per portion'});gr.addEventListener('input',()=>{it.grams=gr.value===''?'':Number(gr.value);});
         const rmi=el('button',{type:'button','aria-label':'Remove ingredient'},'×');rmi.addEventListener('click',()=>{d.items.splice(ii,1);if(!d.items.length)d.items.push({name:'',grams:''});render();});
         row.append(nm,gr,rmi);card.append(row);
       });
