@@ -40,7 +40,12 @@ so no manual database step is needed after deploying. It never drops or rewrites
 3. **Six formats.** `generate_asset` reads the *saved* draft, calls Workers AI and stores the result in
    `content_assets` in the same server request. Existing formats (including manual edits) are skipped
    without an AI call. A short lock stops two tabs generating the same format.
-4. **Spend guard.** Every paid call writes a `usage_events` row first; daily caps return HTTP 429 before
+4. **Long transcripts (over 30,000 characters).** The full transcript is stored once. `transcript_digest`
+   does one AI step per request: each ~36,000-character part becomes bullet notes (`transcript_notes`),
+   notes are condensed further if needed, then one structured research brief is stored in
+   `transcript_briefs`. Every step is saved, so an interrupted run resumes without repeating paid work.
+   The brief (not the raw transcript) feeds the six formats.
+5. **Spend guard.** Every paid call writes a `usage_events` row first; daily caps return HTTP 429 before
    any charge. Today's usage is shown on the Studio overview with the deployed build ID.
 
 Errors return a short reference ID; the server logs only action + reference, never keys or source text.
@@ -64,7 +69,7 @@ Every deploy is a Cloudflare Pages deployment: Pages → `sooloo-ai` → Deploym
 
 Newsletter signup is paused (returns "open soon", stores nothing) until privacy notice, double opt-in and unsubscribe exist; reopen with variable `NEWSLETTER_SIGNUPS_OPEN=true`. Admin access is a
 single long-lived key (Cloudflare Access recommended). No publishing flow, research engine, revision
-history, source versioning or transcript chunking yet.
+history or source versioning yet.
 
 ## Production verification log
 
@@ -75,4 +80,4 @@ history, source versioning or transcript chunking yet.
 | 2026-11-24 | Supadata native captions: first attempt failed instantly (`redirect:'error'` unsupported in Workers) → fixed | FIXED |
 | 2026-11-24 | 6-hour video: real transcript returned, over editor limit → now stored, not re-charged | FIXED |
 | 2026-11-24 | Owner Short `x8GMoBkcTQM`: 1 Supadata call → 451-char transcript → draft saved → 6 AI outputs stored in D1 | PASS |
-| — | Instagram transcript, Whisper audio, async (202) job on a real long video, reload-and-resume in UI | NOT YET RUN |
+| — | Instagram transcript, Whisper audio, async (202) job, reload-and-resume in UI | NOT YET RUN |

@@ -11,7 +11,7 @@ import {join} from 'node:path';
 const dir = mkdtempSync(join(tmpdir(), 'studio-'));
 const modPath = join(dir, 'studio.mjs');
 writeFileSync(modPath, readFileSync(new URL('../functions/studio.js', import.meta.url)));
-const {onRequest, SCHEMA} = await import(modPath);
+const {onRequest, SCHEMA, splitText} = await import(modPath);
 
 const TOKEN = 'a'.repeat(64);
 const ORIGIN = 'https://studio.test';
@@ -34,7 +34,7 @@ function fakeAI(script = {}) {
     if (script.fail && script.fail(calls.length, input)) throw new Error('boom');
     if (model.includes('whisper')) return {text: 'hello world'};
     await new Promise(r => setTimeout(r, script.delay || 0));
-    return {response: 'Generated #' + calls.length, usage: {total_tokens: 10}};
+    return {response: script.respond ? script.respond(calls.length, input) : 'Generated #' + calls.length, usage: {total_tokens: 10}};
   }};
 }
 function env(extra = {}) { return {STUDIO_ADMIN_TOKEN: TOKEN, DB: fakeD1(), AI: fakeAI(), SUPADATA_API_KEY: 'test-key', ...extra}; }
@@ -232,14 +232,69 @@ test('outbound server fetches use a redirect mode the Workers runtime accepts', 
 });
 
 test('long transcript is stored once and never charged again', async () => {
-  mockFetch(() => jsonRes(200, {content: 'word '.repeat(20000), lang: 'en'}));
+  mockFetch(() => jsonRes(200, {content: 'word. '.repeat(20000), lang: 'en'}));
   const e = env();
   const a = await post(e, {action: 'video_transcript', url: VIDEO, mode: 'native'});
-  assert.equal(a.status, 413); assert.match(a.data.error, /saved/);
+  assert.equal(a.status, 200); assert.equal(a.data.status, 'too_long'); assert.equal(a.data.chars, 120000); assert.equal(a.data.parts, 4);
+  assert.equal(a.data.text, undefined);
   const b = await post(e, {action: 'video_transcript', url: VIDEO, mode: 'native'});
-  assert.equal(b.status, 413);
+  assert.equal(b.data.status, 'too_long'); assert.equal(b.data.cached, true);
   assert.equal(fetchLog.length, 1);
-  assert.equal(e.DB.raw.prepare("SELECT length(transcript) n FROM transcript_jobs WHERE status='completed'").get().n, 100000);
+});
+
+async function longJob(e, chars = 120000) {
+  mockFetch(() => jsonRes(200, {content: 'This is a sentence about tools. '.repeat(Math.ceil(chars / 32)).slice(0, chars), lang: 'en'}));
+  return (await post(e, {action: 'video_transcript', url: VIDEO, mode: 'native'})).data.jobId;
+}
+async function digestAll(e, jobId, max = 40) {
+  let r;
+  for (let i = 0; i < max; i++) { r = await post(e, {action: 'transcript_digest', jobId}); if (r.status !== 200 || r.data.status === 'completed') break; }
+  return r;
+}
+
+test('splitText keeps every character and respects the part size', () => {
+  const text = 'Alpha beta. Gamma delta? '.repeat(9000);
+  const parts = splitText(text, 36000);
+  assert.ok(parts.every(p => p.length <= 36000));
+  assert.equal(parts.join(' ').replace(/\s+/g, ''), text.replace(/\s+/g, ''));
+});
+
+test('long transcript → saved notes per part → research brief; rerun costs nothing', async () => {
+  const e = env({AI: fakeAI({respond: n => 'Note or brief #' + n})});
+  const jobId = await longJob(e);
+  const r = await digestAll(e, jobId);
+  assert.equal(r.status, 200); assert.equal(r.data.status, 'completed'); assert.equal(r.data.parts, 4);
+  assert.equal(e.AI.calls.length, 5);
+  assert.equal(e.DB.raw.prepare('SELECT COUNT(*) n FROM transcript_notes').get().n, 4);
+  const again = await post(e, {action: 'transcript_digest', jobId});
+  assert.equal(again.data.text, r.data.text); assert.equal(e.AI.calls.length, 5);
+  assert.ok(r.data.text.length < 30000);
+});
+
+test('long transcript: failure mid-way resumes from the last saved part', async () => {
+  const e = env({AI: fakeAI({fail: n => n === 2})});
+  const jobId = await longJob(e);
+  assert.equal((await post(e, {action: 'transcript_digest', jobId})).data.status, 'working');
+  assert.equal((await post(e, {action: 'transcript_digest', jobId})).status, 502);
+  assert.equal(e.DB.raw.prepare('SELECT COUNT(*) n FROM generation_locks').get().n, 0);
+  const r = await digestAll(e, jobId);
+  assert.equal(r.data.status, 'completed');
+  assert.equal(e.AI.calls.length, 6); // 4 parts + 1 failed attempt + brief
+});
+
+test('very long transcript is condensed in extra levels when notes are too large', async () => {
+  const e = env({AI: fakeAI({respond: (n, input) => input.messages[1].content.startsWith('Transcript part') ? 'n'.repeat(9000) : 'short summary ' + n})});
+  const jobId = await longJob(e, 250000);
+  const r = await digestAll(e, jobId);
+  assert.equal(r.data.status, 'completed');
+  const levels = e.DB.raw.prepare('SELECT DISTINCT level FROM transcript_notes ORDER BY level').all().map(x => x.level);
+  assert.deepEqual(levels, [0, 1]);
+});
+
+test('digest rejects unknown or unfinished jobs', async () => {
+  const e = env();
+  assert.equal((await post(e, {action: 'transcript_digest', jobId: crypto.randomUUID()})).status, 404);
+  assert.equal((await post(e, {action: 'transcript_digest', jobId: 'nope'})).status, 400);
 });
 
 test('client only polls when the job is really pending', () => {
