@@ -11,4 +11,4 @@ jobs:
         with:
           node-version: '22'
       - run: node --check functions/studio.js && node --check functions/api/subscribe.js
-      - run: node --test tests/studio.test.mjs
+      - run: node --test tests/studio.test.mjs tests/party.test.mjs
