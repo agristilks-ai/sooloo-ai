@@ -48,6 +48,10 @@ th{font-weight:600;color:var(--muted);font-size:14px}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 td.big{font:800 22px 'Barlow Condensed',sans-serif}
 .note{color:var(--muted);font-size:14px}
+html,body{overflow-x:hidden}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ing input{min-width:0}
+@media (max-width:560px){main{padding:8px 14px 60px}.step{padding:18px 14px}.dish{padding:12px}.ing{grid-template-columns:minmax(0,1fr) 82px 36px}th,td{padding:8px 4px;font-size:14px}td.big{font-size:19px}textarea{font-size:12px}}
 footer{max-width:1100px;margin:0 auto;padding:30px 24px;color:#a89a8a;font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 @media print{
   body{background:#fff;color:#000}
@@ -98,8 +102,8 @@ Mark	Tartare	Salmon	Cheese"></textarea>
     <h2 id="s3">3. Your prep list and supplier order</h2>
     <p class="note" id="summary"></p>
     <div class="out">
-      <div><h3 class="eyebrow" style="margin:12px 0 6px">PREP LIST</h3><table><thead><tr><th>Dish</th><th class="num">Portions</th><th>Ingredient</th><th class="num">Need</th></tr></thead><tbody id="prepBody"></tbody></table></div>
-      <div><h3 class="eyebrow" style="margin:12px 0 6px">SUPPLIER ORDER</h3><table><thead><tr><th>Ingredient</th><th class="num">Exact</th><th class="num">Order</th></tr></thead><tbody id="orderBody"></tbody></table></div>
+      <div><h3 class="eyebrow" style="margin:12px 0 6px">PREP LIST</h3><div class="table-wrap"><table><thead><tr><th>Dish</th><th class="num">Portions</th><th>Ingredient</th><th class="num">Need</th></tr></thead><tbody id="prepBody"></tbody></table></div></div>
+      <div><h3 class="eyebrow" style="margin:12px 0 6px">SUPPLIER ORDER</h3><div class="table-wrap"><table><thead><tr><th>Ingredient</th><th class="num">Exact</th><th class="num">Order</th></tr></thead><tbody id="orderBody"></tbody></table></div></div>
     </div>
     <div class="row no-print" style="margin-top:18px"><button id="printBtn" type="button">Print</button><button id="copyBtn" type="button" class="ghost">Copy as text</button></div>
     <p class="msg no-print" id="copyMsg" role="status" aria-live="polite"></p>
