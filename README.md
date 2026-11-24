@@ -9,3 +9,6 @@ Create a Pages project connected to a GitHub repository containing this folder. 
 
 ## Before public launch
 Confirm domain and trademark status; finalize legal controller/contact details, privacy notice and unsubscribe process; connect newsletter delivery provider; implement double opt-in and rate limiting/bot protection; test duplicate signups, invalid inputs and successful database persistence in the actual deployed environment; add source links and approve editorial drafts. No public deployment, email delivery, analytics or paid affiliate integration is included. Do not collect public emails until privacy and abuse prevention are ready.
+
+## Newsletter deployment check
+After creating the `subscribers` table and setting the production D1 binding `DB` to `sooloo-db`, deploy the latest main commit. Verify with a test email and confirm the record in D1 before enabling public signup. A successful deployment alone does not confirm database persistence or email delivery.
