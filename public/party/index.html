@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Party Pre-Order Calculator — free tool for chefs | tilksweb</title>
-<meta name="description" content="Paste your guests' pre-orders, set grams per portion and get a prep list and supplier order in seconds. Free, no sign-up, nothing leaves your browser.">
+<meta name="description" content="Enter your guest numbers and pre-orders, set grams per portion and get a prep list and supplier order in seconds. Free, no sign-up, nothing leaves your browser.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&amp;family=Outfit:wght@800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -70,27 +70,29 @@ footer{max-width:1100px;margin:0 auto;padding:30px 24px;color:#a89a8a;font-size:
 <main>
   <div class="eyebrow">FREE TOOL FOR CHEFS</div>
   <h1>Party Pre-Order Calculator</h1>
-  <p class="lead">Paste your guests' choices. Set grams per portion. Get your prep list and supplier order in seconds. No sign-up, and nothing you type leaves your browser.</p>
+  <p class="lead">Enter how many guests you have and what they ordered. Set grams per portion. Get your prep list and supplier order. No sign-up, and nothing you type leaves your browser.</p>
 
   <section class="step input-step" aria-labelledby="s1">
-    <h2 id="s1">1. Paste the pre-orders</h2>
-    <p class="hint">Copy the rows from Excel, Google Sheets or an email: one guest per row, one column per course. A header row like <em>Guest, Starter, Main, Dessert</em> helps.</p>
-    <label for="paste">Guest pre-orders</label>
-    <textarea id="paste" spellcheck="false" placeholder="Guest	Starter	Main	Dessert
-Anna	Soup	Beef	Brownie
-Mark	Tartare	Salmon	Cheese"></textarea>
-    <div class="row" style="margin-top:12px">
-      <button id="countBtn" type="button">Count the dishes</button>
-      <button id="demoBtn" type="button" class="ghost">Load an example (80 guests)</button>
-    </div>
-    <p class="msg" id="pasteMsg" role="status" aria-live="polite"></p>
+    <h2 id="s1">1. How many guests?</h2>
+    <div style="max-width:220px"><label for="guests">Guests at the party</label><input id="guests" type="number" min="1" step="1" inputmode="numeric" placeholder="e.g. 60"></div>
   </section>
 
-  <section class="step input-step" aria-labelledby="s2" id="dishStep" hidden>
-    <h2 id="s2">2. Grams per portion</h2>
-    <p class="hint">For each dish, add the ingredients you need to buy, in <strong>raw weight per portion</strong> (before cooking and trimming). Check the counts, you can correct them.</p>
+  <section class="step input-step" aria-labelledby="s2">
+    <h2 id="s2">2. What did they order?</h2>
+    <p class="hint">For each dish: how many guests chose it, and what you need to buy per portion in <strong>raw weight</strong> (before cooking and trimming).</p>
     <div id="courses"></div>
-    <div class="settings" style="margin-top:16px">
+    <div class="row" style="margin-top:6px"><button id="addCourse" type="button" class="ghost small">+ add a course</button></div>
+    <details style="margin-top:18px">
+      <summary style="cursor:pointer;color:var(--amber)">Have the pre-orders in Excel, Google Sheets or an email? Paste them to fill the counts.</summary>
+      <p class="hint" style="margin-top:10px">One guest per row, one column per course. A header row like <em>Guest, Starter, Main, Dessert</em> helps.</p>
+      <label for="paste">Pasted pre-orders</label>
+      <textarea id="paste" spellcheck="false" placeholder="Guest	Starter	Main	Dessert
+Anna	Soup	Beef	Brownie
+Mark	Tartare	Salmon	Cheese"></textarea>
+      <div class="row" style="margin-top:12px"><button id="countBtn" type="button" class="ghost">Fill counts from this list</button></div>
+      <p class="msg" id="pasteMsg" role="status" aria-live="polite"></p>
+    </details>
+    <div class="settings" style="margin-top:18px">
       <div><label for="buffer">Buffer for late changes and mistakes (%)</label><input id="buffer" type="number" min="0" max="50" step="1" value="10"></div>
       <div><label for="roundTo">Round supplier order up to</label><select id="roundTo"><option value="0.1">0.1 kg</option><option value="0.5">0.5 kg</option><option value="1" selected>1 kg</option></select></div>
     </div>
@@ -167,61 +169,78 @@ function fmtKg(kg){return kg>=10?kg.toFixed(1):kg.toFixed(2).replace(/0$/,'');}
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
-let state={courses:[]};
-const DEFAULTS={soup:[['Soup base',300]],tartare:[['Beef for tartare',100]],beef:[['Beef fillet',180]],salmon:[['Salmon fillet',160]],brownie:[['Brownie',90]],cheese:[['Cheese',60]]};
-function demoText(){
-  const rows=['Guest\tStarter\tMain\tDessert'];
-  for(let i=0;i<80;i++)rows.push(['Guest '+(i+1),i<34?'Soup':'Tartare',i<52?'Beef':'Salmon',i%80<41?'Brownie':'Cheese'].join('\t'));
-  return rows.join('\n');
-}
+const blankDish=()=>({name:'',count:'',items:[{name:'',grams:''}]});
+let courses=[{name:'Starter',dishes:[blankDish()]},{name:'Main',dishes:[blankDish()]},{name:'Dessert',dishes:[blankDish()]}];
 function el(tag,attrs={},text){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!=null)e.textContent=text;return e;}
-function renderDishes(){
+function guests(){return Math.max(0,Math.floor(Number($('guests').value)||0));}
+function courseStatus(c){
+  const g=guests(), n=c.dishes.reduce((a,d)=>a+(Number(d.count)||0),0);
+  if(!g||!n)return {text:n?n+' ordered':'',warn:false};
+  if(n===g)return {text:n+' of '+g+' guests ✓',warn:false};
+  if(n<g)return {text:n+' of '+g+' guests, '+(g-n)+' missing',warn:true};
+  return {text:n+' ordered, '+(n-g)+' more than guests',warn:true};
+}
+function updateStatus(){document.querySelectorAll('[data-status]').forEach(s=>{const c=courses[Number(s.dataset.status)];if(!c)return;const st=courseStatus(c);s.textContent=st.text;s.style.color=st.warn?'#ffb27a':'var(--muted)';});}
+function render(){
   const box=$('courses');box.replaceChildren();
-  state.courses.forEach((course,ci)=>{
-    const sec=el('div',{class:'course'});sec.append(el('h3',{},course.name));
+  courses.forEach((course,ci)=>{
+    const sec=el('div',{class:'course'});
+    const head=el('div',{class:'dish-head'});
+    const cn=el('input',{type:'text',value:course.name,'aria-label':'Course name',style:'max-width:220px;font-weight:600'});cn.addEventListener('input',()=>{course.name=cn.value;});
+    const st=el('span',{'data-status':String(ci),style:'font-size:14px'});
+    head.append(cn,st);sec.append(head);
     course.dishes.forEach((d,di)=>{
-      const card=el('div',{class:'dish'});const head=el('div',{class:'dish-head'});head.append(el('strong',{},d.name));
-      const cnt=el('label',{class:'count'});cnt.append('Portions ');const ci2=el('input',{type:'number',min:'0',step:'1',value:String(d.count),'aria-label':'Portions of '+d.name});
-      ci2.addEventListener('input',()=>{d.count=Number(ci2.value)||0;});cnt.append(ci2);head.append(cnt);card.append(head);
+      const card=el('div',{class:'dish'});
+      const top=el('div',{class:'ing',style:'grid-template-columns:minmax(0,1fr) 96px 36px'});
+      const dn=el('input',{type:'text',value:d.name,placeholder:'Dish, e.g. Beef fillet','aria-label':'Dish name'});dn.addEventListener('input',()=>{d.name=dn.value;});
+      const dc=el('input',{type:'number',min:'0',step:'1',inputmode:'numeric',value:d.count===''?'':String(d.count),placeholder:'Ordered','aria-label':'How many ordered '+(d.name||'this dish')});dc.addEventListener('input',()=>{d.count=dc.value===''?'':Number(dc.value);updateStatus();});
+      const rm=el('button',{type:'button','aria-label':'Remove dish'},'×');rm.addEventListener('click',()=>{course.dishes.splice(di,1);if(!course.dishes.length)course.dishes.push(blankDish());render();});
+      top.append(dn,dc,rm);card.append(top);
       d.items.forEach((it,ii)=>{
         const row=el('div',{class:'ing'});
-        const nm=el('input',{type:'text',value:it.name,placeholder:'Ingredient to buy','aria-label':'Ingredient for '+d.name});nm.addEventListener('input',()=>{it.name=nm.value;});
-        const gr=el('input',{type:'number',min:'0',step:'1',value:it.grams?String(it.grams):'',placeholder:'g / portion','aria-label':'Grams per portion of '+(it.name||'ingredient')});gr.addEventListener('input',()=>{it.grams=Number(gr.value)||0;});
-        const rm=el('button',{type:'button','aria-label':'Remove ingredient'},'×');rm.addEventListener('click',()=>{d.items.splice(ii,1);renderDishes();});
-        row.append(nm,gr,rm);card.append(row);
+        const nm=el('input',{type:'text',value:it.name,placeholder:'Ingredient to buy','aria-label':'Ingredient to buy for '+(d.name||'this dish')});nm.addEventListener('input',()=>{it.name=nm.value;});
+        const gr=el('input',{type:'number',min:'0',step:'1',inputmode:'numeric',value:it.grams===''?'':String(it.grams),placeholder:'g / portion','aria-label':'Grams per portion'});gr.addEventListener('input',()=>{it.grams=gr.value===''?'':Number(gr.value);});
+        const rmi=el('button',{type:'button','aria-label':'Remove ingredient'},'×');rmi.addEventListener('click',()=>{d.items.splice(ii,1);if(!d.items.length)d.items.push({name:'',grams:''});render();});
+        row.append(nm,gr,rmi);card.append(row);
       });
-      const add=el('button',{type:'button',class:'ghost small'},'+ ingredient');add.addEventListener('click',()=>{d.items.push({name:'',grams:0});renderDishes();});
+      const add=el('button',{type:'button',class:'ghost small'},'+ ingredient');add.addEventListener('click',()=>{d.items.push({name:'',grams:''});render();});
       card.append(add);sec.append(card);
     });
-    box.append(sec);
+    const addD=el('button',{type:'button',class:'ghost small'},'+ add a dish to '+(course.name||'this course'));addD.addEventListener('click',()=>{course.dishes.push(blankDish());render();});
+    sec.append(addD);box.append(sec);
   });
+  updateStatus();
 }
-$('demoBtn').addEventListener('click',()=>{$('paste').value=demoText();$('countBtn').click();});
+$('guests').addEventListener('input',updateStatus);
+$('addCourse').addEventListener('click',()=>{courses.push({name:'Course '+(courses.length+1),dishes:[blankDish()]});render();});
 $('countBtn').addEventListener('click',()=>{
   const r=parsePreorders($('paste').value);
-  if(!r.courses.length){$('pasteMsg').textContent='Nothing to count yet. Paste one guest per row.';$('dishStep').hidden=true;return;}
-  for(const c of r.courses)for(const d of c.dishes){const key=d.name.toLowerCase();d.items=(DEFAULTS[key]||[[d.name,0]]).map(([name,grams])=>({name,grams}));}
-  state.courses=r.courses;
-  $('pasteMsg').textContent='Counted '+r.guests+' guests across '+r.courses.length+' course'+(r.courses.length===1?'':'s')+'.';
-  $('dishStep').hidden=false;renderDishes();$('resultStep').hidden=true;
-  $('dishStep').scrollIntoView({behavior:'smooth',block:'start'});
+  if(!r.courses.length){$('pasteMsg').textContent='Nothing to count yet. Paste one guest per row.';return;}
+  courses=r.courses.map(c=>({name:c.name,dishes:c.dishes.map(d=>({name:d.name,count:d.count,items:[{name:d.name,grams:''}]}))}));
+  if(!guests())$('guests').value=String(r.guests);
+  $('pasteMsg').textContent='Counted '+r.guests+' guests across '+r.courses.length+' course'+(r.courses.length===1?'':'s')+'. Now add grams per portion.';
+  render();
 });
 let lastText='';
 $('calcBtn').addEventListener('click',()=>{
   const step=Number($('roundTo').value)||1, buf=Number($('buffer').value)||0;
-  const {prep,order}=calculate(state.courses,buf,step);
-  if(!prep.length){$('calcMsg').textContent='Add at least one ingredient with grams per portion.';return;}
-  $('calcMsg').textContent='';
+  const input=courses.map(c=>({name:c.name,dishes:c.dishes.map(d=>({name:d.name||'Dish',count:Number(d.count)||0,items:d.items.map(it=>({name:(it.name||d.name||'').trim(),grams:Number(it.grams)||0}))}))}));
+  const {prep,order}=calculate(input,buf,step);
+  if(!prep.length){$('calcMsg').textContent='Add at least one dish with how many were ordered and grams per portion.';return;}
+  const warn=courses.map(courseStatus).filter(s=>s.warn).length;
+  $('calcMsg').textContent=warn?'Check the counts: some courses do not match the number of guests.':'';
   const pb=$('prepBody');pb.replaceChildren();
   for(const p of prep){const tr=el('tr');tr.append(el('td',{},p.dish),el('td',{class:'num'},String(p.portions)),el('td',{},p.ingredient),el('td',{class:'num big'},fmtKg(p.kg)+' kg'));pb.append(tr);}
   const ob=$('orderBody');ob.replaceChildren();
   for(const o of order){const tr=el('tr');tr.append(el('td',{},o.ingredient),el('td',{class:'num'},fmtKg(o.kg)+' kg'),el('td',{class:'num big'},(step<1?o.order.toFixed(1):String(o.order))+' kg'));ob.append(tr);}
-  $('summary').textContent='Includes a '+buf+'% buffer. Supplier order rounded up to '+step+' kg.';
+  const g=guests();
+  $('summary').textContent=(g?g+' guests. ':'')+'Includes a '+buf+'% buffer. Supplier order rounded up to '+step+' kg.';
   lastText='PREP LIST\n'+prep.map(p=>p.dish+' ('+p.portions+'): '+p.ingredient+' '+fmtKg(p.kg)+' kg').join('\n')+'\n\nSUPPLIER ORDER\n'+order.map(o=>o.ingredient+': '+(step<1?o.order.toFixed(1):o.order)+' kg').join('\n')+'\n\nMade with tilksweb.com/party';
   $('resultStep').hidden=false;$('resultStep').scrollIntoView({behavior:'smooth',block:'start'});
 });
 $('printBtn').addEventListener('click',()=>window.print());
 $('copyBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(lastText);$('copyMsg').textContent='Copied.';}catch{$('copyMsg').textContent='Copy did not work here; use Print instead.';}});
+render();
 })();
 </script>
 </body>
