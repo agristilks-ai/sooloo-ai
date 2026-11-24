@@ -65,3 +65,14 @@ Every deploy is a Cloudflare Pages deployment: Pages → `sooloo-ai` → Deploym
 Newsletter signup is paused (returns "open soon", stores nothing) until privacy notice, double opt-in and unsubscribe exist; reopen with variable `NEWSLETTER_SIGNUPS_OPEN=true`. Admin access is a
 single long-lived key (Cloudflare Access recommended). No publishing flow, research engine, revision
 history, source versioning or transcript chunking yet.
+
+## Production verification log
+
+| Date (UTC) | Check | Result |
+|---|---|---|
+| 2026-11-24 | Live `/studio` serves v0.10; invalid key → 401; signup paused → 503 "open soon" | PASS |
+| 2026-11-24 | Workers AI, 6 formats from original test note → 6 `content_assets` rows; second run → 0 AI calls, 6 preserved | PASS |
+| 2026-11-24 | Supadata native captions: first attempt failed instantly (`redirect:'error'` unsupported in Workers) → fixed | FIXED |
+| 2026-11-24 | 6-hour video: real transcript returned, over editor limit → now stored, not re-charged | FIXED |
+| 2026-11-24 | Owner Short `x8GMoBkcTQM`: 1 Supadata call → 451-char transcript → draft saved → 6 AI outputs stored in D1 | PASS |
+| — | Instagram transcript, Whisper audio, async (202) job on a real long video, reload-and-resume in UI | NOT YET RUN |

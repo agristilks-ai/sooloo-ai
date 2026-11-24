@@ -241,3 +241,15 @@ test('long transcript is stored once and never charged again', async () => {
   assert.equal(fetchLog.length, 1);
   assert.equal(e.DB.raw.prepare("SELECT length(transcript) n FROM transcript_jobs WHERE status='completed'").get().n, 100000);
 });
+
+test('client only polls when the job is really pending', () => {
+  const src = readFileSync(new URL('../functions/studio.js', import.meta.url), 'utf8');
+  assert.match(src, /if\(d\.status==='pending'&&d\.jobId\)/);
+});
+
+test('leading "Here is ..." preamble is removed from AI output', async () => {
+  const e = env({AI: {calls: [], async run() { return {response: "Here's a LinkedIn post based on the material:\n\nReal post text"}; }}});
+  const id = await newDraft(e);
+  const r = await post(e, {action: 'generate_asset', id, format: 'linkedin'});
+  assert.equal(r.data.output, 'Real post text');
+});
