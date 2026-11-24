@@ -307,6 +307,7 @@ const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 // Non-destructive schema, mirrored in migrations/0001_studio_schema.sql.
 export const SCHEMA=[
   "CREATE TABLE IF NOT EXISTS subscribers (email TEXT PRIMARY KEY, consented_at TEXT NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS leads (email TEXT NOT NULL, source TEXT NOT NULL, consented_at TEXT NOT NULL, PRIMARY KEY(email,source))",
   "CREATE TABLE IF NOT EXISTS editorial_drafts (id TEXT PRIMARY KEY, title TEXT NOT NULL, category TEXT NOT NULL, source_url TEXT NOT NULL DEFAULT '', research TEXT NOT NULL DEFAULT '', body TEXT NOT NULL DEFAULT '', updated_at TEXT NOT NULL)",
   "CREATE TABLE IF NOT EXISTS content_assets (draft_id TEXT NOT NULL REFERENCES editorial_drafts(id), format TEXT NOT NULL, content TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(draft_id,format))",
   "CREATE TABLE IF NOT EXISTS transcript_jobs (id TEXT PRIMARY KEY, source_url TEXT NOT NULL, mode TEXT NOT NULL, provider_job_id TEXT, status TEXT NOT NULL, transcript TEXT, lang TEXT NOT NULL DEFAULT '', error TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",

@@ -11,3 +11,6 @@ CREATE TABLE IF NOT EXISTS usage_events (id TEXT PRIMARY KEY, provider TEXT NOT 
 CREATE INDEX IF NOT EXISTS usage_events_day ON usage_events(provider,created_at);
 CREATE TABLE IF NOT EXISTS transcript_notes (job_id TEXT NOT NULL, level INTEGER NOT NULL, idx INTEGER NOT NULL, notes TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY(job_id,level,idx));
 CREATE TABLE IF NOT EXISTS transcript_briefs (job_id TEXT PRIMARY KEY, brief TEXT NOT NULL, parts INTEGER NOT NULL, created_at TEXT NOT NULL);
+
+-- Free-tool email capture (functions/api/lead.js)
+CREATE TABLE IF NOT EXISTS leads (email TEXT NOT NULL, source TEXT NOT NULL, consented_at TEXT NOT NULL, PRIMARY KEY(email,source));

@@ -10,5 +10,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --check functions/studio.js && node --check functions/api/subscribe.js
-      - run: node --test tests/studio.test.mjs tests/party.test.mjs
+      - run: node --check functions/studio.js && node --check functions/api/subscribe.js && node --check functions/api/lead.js
+      - run: node --test tests/studio.test.mjs tests/party.test.mjs tests/foodcost.test.mjs

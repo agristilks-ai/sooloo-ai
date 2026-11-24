@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plate Cost Calculator: free food cost tool for chefs | tilksweb</title>
+<meta name="description" content="Work out what every plate costs you, your food cost % and the menu price you should charge. Free, built by a working chef. Works on your phone.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&amp;family=Outfit:wght@800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{--bg:#16120e;--panel:#231c16;--panel2:#1d1712;--line:#3a2f25;--line2:#4a3d31;--text:#f3eadf;--muted:#c4b6a4;--amber:#f2a33a;--copper:#c2562b;--good:#7fbf7a;--bad:#e2704a}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 Inter,system-ui,sans-serif}
+a{color:var(--amber)}
+header{max-width:1100px;margin:0 auto;padding:20px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.logo{display:inline-flex;align-items:flex-end;gap:2px;font:800 28px/.8 Outfit,system-ui,sans-serif;letter-spacing:-.045em;color:var(--text);text-decoration:none}
+main{max-width:1100px;margin:0 auto;padding:6px 20px 80px}
+.eyebrow{font:600 14px 'Barlow Condensed',sans-serif;letter-spacing:.22em;color:var(--amber)}
+h1{font:800 clamp(42px,7vw,72px)/.95 'Barlow Condensed',sans-serif;margin:8px 0 12px}
+h2{font:800 28px/1 'Barlow Condensed',sans-serif;margin:0}
+.lead{color:var(--muted);font-size:18px;max-width:680px;margin:0 0 24px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
+.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.sticky{position:sticky;top:16px}
+input,select{background:var(--bg);color:var(--text);border:1px solid var(--line2);border-radius:10px;padding:11px 12px;font:inherit;width:100%;min-width:0}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+label,.lab{font-weight:600;font-size:13px;color:var(--muted);display:block;margin-bottom:5px}
+button{font:inherit;font-weight:600;border:0;border-radius:999px;padding:12px 20px;cursor:pointer;background:var(--amber);color:#1d1712}
+button.ghost{background:transparent;color:var(--text);border:1px solid var(--line2)}
+button.small{padding:7px 13px;font-size:14px}
+button.x{background:transparent;border:1px solid var(--line2);color:var(--muted);border-radius:10px;padding:0;width:40px;height:44px;font-size:18px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:12px}
+.ing{border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:12px;margin-top:10px}
+.ing-top{display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:8px;margin-bottom:8px}
+.ing-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) 74px;gap:6px}
+.line-cost{margin-top:8px;font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
+.line-cost b{color:var(--text);font-variant-numeric:tabular-nums}
+.warn{color:var(--bad)}
+.bar{height:5px;border-radius:9px;background:#2d241c;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--copper)}
+.big{font:800 64px/.9 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi .v{font:800 30px/1 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums;margin-top:4px}
+.verdict{border-radius:12px;padding:12px 14px;font-weight:600;margin-top:4px}
+.verdict.ok{background:rgba(127,191,122,.12);color:var(--good)}.verdict.hi{background:rgba(226,112,74,.13);color:var(--bad)}.verdict.na{background:var(--panel2);color:var(--muted);font-weight:500}
+.settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+details summary{cursor:pointer;color:var(--muted);font-size:14px;margin-top:14px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px 6px;border-bottom:1px solid var(--line);font-size:15px}
+th{color:var(--muted);font-weight:600;font-size:13px}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.table-wrap{overflow-x:auto}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:13px;font-weight:700}
+.pill.ok{background:rgba(127,191,122,.15);color:var(--good)}.pill.hi{background:rgba(226,112,74,.15);color:var(--bad)}
+.note{color:var(--muted);font-size:14px}
+.toast{min-height:1.4em;color:var(--muted);font-size:14px;margin-top:8px}
+dialog{background:var(--panel);color:var(--text);border:1px solid var(--line2);border-radius:18px;padding:24px;max-width:440px;width:calc(100% - 28px)}
+dialog::backdrop{background:rgba(0,0,0,.65)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted);margin:14px 0}
+.check input{width:20px;height:20px;flex:none;margin-top:1px}
+footer{max-width:1100px;margin:0 auto;padding:28px 20px;color:#a89a8a;font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+#cards{display:none}
+#mbar{display:none}
+@media (max-width:860px){#mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:5;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(29,23,18,.96);border-top:1px solid var(--line);font-weight:600}#mbar b{font:800 26px 'Barlow Condensed',sans-serif}#mbar a{font-size:14px}body{padding-bottom:70px}}
+@media (max-width:860px){.layout{grid-template-columns:1fr}.sticky{position:static}}
+@media (max-width:560px){main{padding:4px 14px 60px}.card{padding:16px 14px}.ing-grid{grid-template-columns:1fr 1fr}.ing-grid .yield{grid-column:span 2}.settings{grid-template-columns:1fr 1fr}.settings .cur{grid-column:span 2}.big{font-size:56px}th,td{padding:8px 4px;font-size:14px}}
+@media print{
+  @page{margin:14mm}
+  body{background:#fff;color:#111;font-size:12px}
+  header,main,footer,dialog,#mbar{display:none!important}
+  #cards{display:block!important}
+  .rc{break-inside:avoid;border:1px solid #bbb;border-radius:8px;padding:12px 14px;margin:0 0 12px}
+  .rc h3{font:800 22px 'Barlow Condensed',sans-serif;margin:0 0 4px}
+  .rc table th,.rc table td{color:#111;border-color:#ddd;padding:4px;font-size:12px}
+  .rc .sum{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px;font-weight:600}
+  .made{text-align:center;color:#666;font-size:11px;margin-top:10px}
+}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/">tilksweb<svg width="12" height="17" viewBox="0 0 20 27" aria-hidden="true"><path d="M10 0C14 7 19 11 19 17A9 9 0 0 1 1 17C1 13 4 10 6 8C6 12 8 13 10 13C9 9 9 4 10 0Z" fill="#f2a33a"/></svg></a>
+  <a href="/">More tools</a>
+</header>
+<main>
+  <div class="eyebrow">FREE TOOL FOR CHEFS AND OWNERS</div>
+  <h1>Plate Cost Calculator</h1>
+  <p class="lead">Put in what you buy and what goes on the plate. See what one portion costs you, your food cost % and what to charge. No sign-up needed.</p>
+
+  <div class="layout">
+    <section class="card" aria-labelledby="dishH">
+      <h2 id="dishH">The dish</h2>
+      <div class="grid2" style="margin-top:14px">
+        <div><label for="dishName">Dish name</label><input id="dishName" placeholder="e.g. Beef burger"></div>
+        <div><label for="portions">Portions it makes</label><input id="portions" type="text" inputmode="decimal" value="1"></div>
+      </div>
+
+      <div class="row" style="justify-content:space-between;margin-top:20px"><span class="lab" style="margin:0">Ingredients</span><span class="note" id="ingCount"></span></div>
+      <div id="ings"></div>
+      <button class="ghost small" id="addIng" style="margin-top:12px">+ Add ingredient</button>
+
+      <details id="setBox">
+        <summary>Settings: currency, target food cost, tax on menu prices</summary>
+        <div class="settings">
+          <div class="cur"><label for="cur">Currency</label><select id="cur"><option>€</option><option>£</option><option>$</option><option value="kr">kr</option></select></div>
+          <div><label for="target">Target food cost %</label><input id="target" inputmode="decimal" value="30"></div>
+          <div><label for="vat">Tax in menu price %</label><input id="vat" inputmode="decimal" value="0"></div>
+        </div>
+        <p class="note" style="margin:10px 0 0">If your menu prices include VAT or MVA, put the rate here (for example 25 or 15). Food cost % is then worked out on the price without tax, the way your accountant does it.</p>
+      </details>
+    </section>
+
+    <aside class="card sticky" aria-live="polite">
+      <div class="lab">One portion costs you</div>
+      <div class="big" id="perPortion">–</div>
+      <div class="kpis">
+        <div class="kpi"><div class="lab" style="margin:0">Charge at least</div><div class="v" id="suggested">–</div><div class="note" id="suggestedNote"></div></div>
+        <div class="kpi"><label for="menuPrice" style="margin:0">Your menu price</label><input id="menuPrice" inputmode="decimal" placeholder="e.g. 18.50" style="margin-top:4px"></div>
+      </div>
+      <div id="verdict" class="verdict na">Add your ingredients to see the result.</div>
+      <div id="profitLine" class="note" style="margin-top:10px"></div>
+      <div class="row" style="margin-top:16px">
+        <button id="saveDish">Save dish to my menu</button>
+        <button class="ghost" id="newDish">New dish</button>
+      </div>
+      <div class="toast" id="toast"></div>
+    </aside>
+  </div>
+
+  <section class="card" style="margin-top:20px" aria-labelledby="menuH">
+    <div class="row" style="justify-content:space-between">
+      <h2 id="menuH">My menu</h2>
+      <button id="printBtn">Get printable recipe cost cards</button>
+    </div>
+    <p class="note" style="margin:8px 0 0">Saved on this device only. Worst food cost first.</p>
+    <div class="table-wrap" style="margin-top:10px"><table>
+      <thead><tr><th>Dish</th><th class="num">Cost</th><th class="num">Price</th><th class="num">Food cost</th><th></th></tr></thead>
+      <tbody id="menuBody"><tr><td colspan="5" class="note">No dishes saved yet.</td></tr></tbody>
+    </table></div>
+  </section>
+
+  <p class="note" style="margin-top:22px">Your dishes and prices are never sent anywhere. They stay in this browser. Built by a working chef. Numbers are a guide, so check them against your own invoices.</p>
+</main>
+
+<dialog id="gate" aria-labelledby="gateH">
+  <form method="dialog" id="gateForm">
+    <h2 id="gateH">Your recipe cost cards</h2>
+    <p class="note" style="margin:8px 0 14px">One page per dish with ingredients, cost per portion, menu price and food cost %. Print them for the kitchen or save as PDF. Free, just leave your email.</p>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="email" required placeholder="you@restaurant.com">
+    <label class="check"><input type="checkbox" id="consent" required><span>Send me new free kitchen tools from tilksweb. I can unsubscribe any time. <a href="/privacy.html" target="_blank">Privacy</a></span></label>
+    <div class="row"><button id="gateGo" value="go">Get my cards</button><button class="ghost" value="cancel" formnovalidate>Not now</button></div>
+    <div class="toast" id="gateMsg"></div>
+  </form>
+</dialog>
+
+<div id="mbar" aria-hidden="true"><span>Per portion <b id="mCost">–</b></span><span id="mPct" class="note"></span><a href="#perPortion">See result ↓</a></div>
+<div id="cards"></div>
+
+<footer><span>tilksweb · AI and tools for real kitchens</span><a href="/privacy.html">Privacy</a></footer>
+
+<script id="core">
+// Pure functions, tested in tests/foodcost.test.mjs.
+var UNITS = {g:['w',1], kg:['w',1000], ml:['v',1], l:['v',1000], pcs:['p',1]};
+function num(v){
+  if (typeof v === 'number') return isFinite(v) ? v : NaN;
+  var s = String(v == null ? '' : v).trim().replace(/\s/g, '');
+  if (!s) return NaN;
+  if (s.indexOf(',') >= 0 && s.indexOf('.') >= 0) s = s.lastIndexOf(',') > s.lastIndexOf('.') ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, '');
+  else s = s.replace(',', '.');
+  var n = Number(s);
+  return isFinite(n) ? n : NaN;
+}
+function ingredientCost(i){
+  var amount = num(i.amount), price = num(i.price), y = i.yieldPct === '' || i.yieldPct == null ? 100 : num(i.yieldPct);
+  if (!(amount > 0) || !(price >= 0)) return {cost: 0, error: 'missing'};
+  var u = UNITS[i.unit], p = UNITS[i.per];
+  if (!u || !p) return {cost: 0, error: 'unit'};
+  if (u[0] !== p[0]) return {cost: 0, error: 'mismatch'};
+  if (!(y > 0 && y <= 100)) return {cost: 0, error: 'yield'};
+  return {cost: (amount * u[1]) / p[1] * price / (y / 100), error: null};
+}
+function dishCost(dish){
+  var portions = num(dish.portions); if (!(portions > 0)) portions = 1;
+  var lines = (dish.items || []).map(function(i){ var r = ingredientCost(i); return {name: i.name || 'Ingredient', cost: r.cost, error: r.error}; });
+  var total = lines.reduce(function(s, l){ return s + l.cost; }, 0);
+  lines.forEach(function(l){ l.share = total > 0 ? l.cost / total : 0; });
+  return {total: total, perPortion: total / portions, lines: lines, complete: lines.length > 0 && lines.every(function(l){ return !l.error; })};
+}
+function pricing(perPortion, o){
+  var target = num(o.targetPct), vat = num(o.vatPct); if (!(vat >= 0)) vat = 0;
+  var res = {suggestedGross: NaN, actualPct: NaN, profitNet: NaN};
+  if (perPortion > 0 && target > 0 && target < 100) res.suggestedGross = niceUp(perPortion / (target / 100) * (1 + vat / 100));
+  var menu = num(o.menuPrice);
+  if (perPortion > 0 && menu > 0){ var net = menu / (1 + vat / 100); res.actualPct = perPortion / net * 100; res.profitNet = net - perPortion; }
+  return res;
+}
+function niceUp(x){ var step = x >= 100 ? 1 : x >= 20 ? 0.5 : 0.1; return Math.ceil(x / step - 1e-9) * step; }
+function money(x, cur){
+  if (!isFinite(x)) return '–';
+  var s = x.toFixed(2);
+  return cur === 'kr' ? s.replace('.', ',') + ' kr' : cur + s;
+}
+</script>
+
+<script>
+var KEY = 'tw_foodcost_v1';
+var $ = function(id){ return document.getElementById(id); };
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ return {}; } }
+function store(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+var state = load();
+state.settings = state.settings || {cur:'€', target:'30', vat:'0'};
+state.menu = state.menu || [];
+var blankItem = function(){ return {name:'', amount:'', unit:'g', price:'', per:'kg', yieldPct:''}; };
+var dish = state.draft || {id:null, name:'', portions:'1', menuPrice:'', items:[blankItem(), blankItem()]};
+
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function opts(list, sel){ return list.map(function(u){ return '<option' + (u === sel ? ' selected' : '') + '>' + u + '</option>'; }).join(''); }
+
+function renderIngs(){
+  $('ings').innerHTML = dish.items.map(function(it, k){
+    return '<div class="ing" data-k="' + k + '">' +
+      '<div class="ing-top"><input data-f="name" aria-label="Ingredient name" placeholder="Ingredient, e.g. Beef mince" value="' + esc(it.name) + '"><button class="x" data-del="' + k + '" aria-label="Remove ingredient">×</button></div>' +
+      '<div class="ing-grid">' +
+        '<div><span class="lab">On the plate</span><div class="pair"><input data-f="amount" inputmode="decimal" placeholder="180" value="' + esc(it.amount) + '" aria-label="Amount used"><select data-f="unit" aria-label="Unit used">' + opts(['g','kg','ml','l','pcs'], it.unit) + '</select></div></div>' +
+        '<div><span class="lab">You pay</span><div class="pair"><input data-f="price" inputmode="decimal" placeholder="12.90" value="' + esc(it.price) + '" aria-label="Purchase price"><select data-f="per" aria-label="Price per">' + opts(['kg','l','pcs'], it.per) + '</select></div></div>' +
+        '<div class="yield"><span class="lab">Usable after trim %</span><input data-f="yieldPct" inputmode="decimal" placeholder="100" value="' + esc(it.yieldPct) + '" aria-label="Usable percent after trimming"></div>' +
+      '</div><div class="line-cost" id="lc' + k + '"></div></div>';
+  }).join('');
+  update();
+}
+
+var ERR = {missing:'Add amount and price', mismatch:'Units don’t match (weight vs volume vs pieces)', yield:'Usable % must be 1 to 100', unit:'Pick a unit'};
+function update(){
+  var s = state.settings, r = dishCost(dish), cur = s.cur;
+  r.lines.forEach(function(l, k){
+    var el = $('lc' + k); if (!el) return;
+    var it = dish.items[k], empty = !it.amount && !it.price;
+    el.innerHTML = empty ? '' : l.error ? '<span class="warn">' + ERR[l.error] + '</span>' :
+      '<span>' + Math.round(l.share * 100) + '% of the dish</span><b>' + money(l.cost, cur) + '</b>';
+  });
+  var filled = r.lines.filter(function(l){ return !l.error; }).length;
+  $('ingCount').textContent = filled + ' of ' + dish.items.length + ' counted';
+  var pp = r.perPortion, p = pricing(pp, {targetPct: s.target, vatPct: s.vat, menuPrice: dish.menuPrice});
+  $('perPortion').textContent = pp > 0 ? money(pp, cur) : '–';
+  $('suggested').textContent = money(p.suggestedGross, cur);
+  $('suggestedNote').textContent = isFinite(p.suggestedGross) ? 'for ' + num(s.target) + '% food cost' + (num(s.vat) > 0 ? ', incl. ' + num(s.vat) + '% tax' : '') : '';
+  var v = $('verdict'), t = num(s.target);
+  if (!(pp > 0)) { v.className = 'verdict na'; v.textContent = 'Add your ingredients to see the result.'; $('profitLine').textContent = ''; }
+  else if (!isFinite(p.actualPct)) { v.className = 'verdict na'; v.textContent = 'Type your menu price to see your food cost %.'; $('profitLine').textContent = ''; }
+  else {
+    var hi = p.actualPct > t + 0.05;
+    v.className = 'verdict ' + (hi ? 'hi' : 'ok');
+    v.textContent = 'Food cost ' + p.actualPct.toFixed(1) + '%' + (hi ? '. Above your ' + t + '% target. Raise the price or cut the portion.' : '. Within your ' + t + '% target.');
+    $('profitLine').textContent = 'You keep ' + money(p.profitNet, cur) + ' per plate after ingredients' + (num(s.vat) > 0 ? ' and tax' : '') + '.';
+  }
+  $('mCost').textContent = pp > 0 ? money(pp, cur) : '–';
+  $('mPct').textContent = isFinite(p.actualPct) ? p.actualPct.toFixed(1) + '% food cost' : '';
+  state.draft = dish; store();
+}
+
+$('ings').addEventListener('input', function(e){
+  var f = e.target.dataset.f, box = e.target.closest('.ing'); if (!f || !box) return;
+  dish.items[+box.dataset.k][f] = e.target.value; update();
+});
+$('ings').addEventListener('click', function(e){
+  var k = e.target.dataset.del; if (k == null) return;
+  dish.items.splice(+k, 1); if (!dish.items.length) dish.items.push(blankItem()); renderIngs();
+});
+$('addIng').onclick = function(){ dish.items.push(blankItem()); renderIngs(); var last = $('ings').lastElementChild; if (last) last.querySelector('input').focus(); };
+$('dishName').oninput = function(){ dish.name = this.value; update(); };
+$('portions').oninput = function(){ dish.portions = this.value; update(); };
+$('menuPrice').oninput = function(){ dish.menuPrice = this.value; update(); };
+['cur','target','vat'].forEach(function(id){ $(id).oninput = $(id).onchange = function(){ state.settings[id] = this.value; update(); renderMenu(); }; });
+
+function toast(msg){ $('toast').textContent = msg; clearTimeout(toast.t); toast.t = setTimeout(function(){ $('toast').textContent = ''; }, 3500); }
+$('saveDish').onclick = function(){
+  var r = dishCost(dish);
+  if (!dish.name.trim()) { toast('Give the dish a name first.'); $('dishName').focus(); return; }
+  if (!(r.perPortion > 0)) { toast('Add at least one ingredient with amount and price.'); return; }
+  var copy = JSON.parse(JSON.stringify(dish)); copy.items = copy.items.filter(function(i){ return i.name || i.amount || i.price; });
+  if (!copy.id) copy.id = Date.now().toString(36);
+  dish.id = copy.id;
+  var at = state.menu.findIndex(function(d){ return d.id === copy.id; });
+  if (at >= 0) state.menu[at] = copy; else state.menu.push(copy);
+  store(); renderMenu(); toast('Saved "' + copy.name + '" to your menu.');
+};
+$('newDish').onclick = function(){ dish = {id:null, name:'', portions:'1', menuPrice:'', items:[blankItem(), blankItem()]}; fill(); $('dishName').focus(); };
+
+function rowCalc(d){ var r = dishCost(d), p = pricing(r.perPortion, {targetPct: state.settings.target, vatPct: state.settings.vat, menuPrice: d.menuPrice}); return {d:d, r:r, p:p}; }
+function sortedMenu(){ return state.menu.map(rowCalc).sort(function(a, b){ return (isFinite(b.p.actualPct) ? b.p.actualPct : -1) - (isFinite(a.p.actualPct) ? a.p.actualPct : -1); }); }
+function renderMenu(){
+  var cur = state.settings.cur, t = num(state.settings.target);
+  if (!state.menu.length) { $('menuBody').innerHTML = '<tr><td colspan="5" class="note">No dishes saved yet.</td></tr>'; return; }
+  $('menuBody').innerHTML = sortedMenu().map(function(x){
+    var pct = x.p.actualPct, pill = isFinite(pct) ? '<span class="pill ' + (pct > t + 0.05 ? 'hi' : 'ok') + '">' + pct.toFixed(1) + '%</span>' : '<span class="note">no price</span>';
+    return '<tr><td><a href="#" data-open="' + esc(x.d.id) + '">' + esc(x.d.name) + '</a></td><td class="num">' + money(x.r.perPortion, cur) + '</td><td class="num">' + (num(x.d.menuPrice) > 0 ? money(num(x.d.menuPrice), cur) : '–') + '</td><td class="num">' + pill + '</td><td class="num"><button class="x" style="height:34px;width:34px" data-rm="' + esc(x.d.id) + '" aria-label="Delete ' + esc(x.d.name) + '">×</button></td></tr>';
+  }).join('');
+}
+$('menuBody').addEventListener('click', function(e){
+  var o = e.target.dataset.open, rm = e.target.dataset.rm;
+  if (o) { e.preventDefault(); var d = state.menu.find(function(x){ return x.id === o; }); if (d) { dish = JSON.parse(JSON.stringify(d)); if (!dish.items.length) dish.items.push(blankItem()); fill(); window.scrollTo({top:0, behavior:'smooth'}); } }
+  if (rm) { var d2 = state.menu.find(function(x){ return x.id === rm; }); if (d2 && confirm('Delete "' + d2.name + '" from your menu?')) { state.menu = state.menu.filter(function(x){ return x.id !== rm; }); if (dish.id === rm) dish.id = null; store(); renderMenu(); } }
+});
+
+function fill(){
+  $('dishName').value = dish.name || ''; $('portions').value = dish.portions || '1'; $('menuPrice').value = dish.menuPrice || '';
+  $('cur').value = state.settings.cur; $('target').value = state.settings.target; $('vat').value = state.settings.vat;
+  renderIngs();
+}
+
+function buildCards(){
+  var cur = state.settings.cur, list = state.menu.length ? sortedMenu() : [rowCalc(dish)];
+  $('cards').innerHTML = list.map(function(x){
+    var d = x.d, r = x.r, p = x.p;
+    return '<div class="rc"><h3>' + esc(d.name || 'Dish') + '</h3><div>Makes ' + esc(num(d.portions) > 0 ? num(d.portions) : 1) + ' portion(s)</div>' +
+      '<table><thead><tr><th>Ingredient</th><th>On the plate</th><th>Bought at</th><th>Usable</th><th class="num">Cost</th></tr></thead><tbody>' +
+      d.items.map(function(i, k){ var l = r.lines[k]; return '<tr><td>' + esc(i.name) + '</td><td>' + esc(i.amount) + ' ' + esc(i.unit) + '</td><td>' + esc(i.price) + ' / ' + esc(i.per) + '</td><td>' + esc(i.yieldPct || 100) + '%</td><td class="num">' + (l && !l.error ? money(l.cost, cur) : '–') + '</td></tr>'; }).join('') +
+      '</tbody></table><div class="sum"><span>Cost per portion: ' + money(r.perPortion, cur) + '</span><span>Menu price: ' + (num(d.menuPrice) > 0 ? money(num(d.menuPrice), cur) : '–') + '</span><span>Food cost: ' + (isFinite(p.actualPct) ? p.actualPct.toFixed(1) + '%' : '–') + '</span><span>Charge at least: ' + money(p.suggestedGross, cur) + '</span></div></div>';
+  }).join('') + '<div class="made">Made free with tilksweb.com · Plate Cost Calculator</div>';
+}
+function printCards(){ buildCards(); setTimeout(function(){ window.print(); }, 50); }
+
+$('printBtn').onclick = function(){
+  if (!state.menu.length && !(dishCost(dish).perPortion > 0)) { toast('Save at least one dish first.'); window.scrollTo({top:0, behavior:'smooth'}); return; }
+  if (state.unlocked) return printCards();
+  $('gateMsg').textContent = ''; $('gate').showModal(); $('email').focus();
+};
+$('gateForm').addEventListener('submit', function(e){
+  if (e.submitter && e.submitter.value === 'cancel') return;
+  e.preventDefault();
+  var email = $('email').value.trim();
+  if (!$('email').checkValidity() || !$('consent').checked) { $('gateMsg').textContent = 'Add your email and tick the box.'; return; }
+  $('gateGo').disabled = true; $('gateMsg').textContent = 'Saving...';
+  fetch('/api/lead', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email: email, consent: true, source: 'food-cost'})})
+    .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return {ok: r.ok, d: d}; }); })
+    .then(function(x){
+      if (!x.ok) throw Error(x.d.error || 'Could not save.');
+      state.unlocked = true; store(); $('gate').close(); printCards();
+    })
+    .catch(function(err){ $('gateMsg').textContent = err.message + ' Please try again.'; })
+    .finally(function(){ $('gateGo').disabled = false; });
+});
+
+fill(); renderMenu();
+</script>
+</body>
+</html>
