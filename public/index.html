@@ -1,152 +1,27 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">
-<title>tilksweb — AI for real kitchens</title>
-<meta name="description" content="What AI really saves in a restaurant kitchen: inventory, deliveries, bookings, menus, staff and HACCP, tested by a working chef.">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;800&amp;family=Outfit:wght@800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TILKSWEB — Independent AI Venture Studio</title>
+<meta name="description" content="TILKSWEB is an independent venture studio developing its own digital media, software and products with AI and automation.">
+<link rel="canonical" href="https://tilksweb.com/"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b0e10"><meta name="robots" content="noindex">
 <style>
-body{margin:0;background:#16120e}
-a{color:#f3eadf;text-decoration:none}a:hover{color:#f2a33a}
-.stage{position:relative;width:min(100%,460px);aspect-ratio:1;perspective:900px;display:flex;align-items:center;justify-content:center}
-.ring{position:absolute;inset:0;border-radius:50%;transform-style:preserve-3d}
-.ring i{position:absolute;width:10px;height:10px;border-radius:50%;background:#ffd08a;box-shadow:0 0 14px #f2a33a;top:-5px;left:calc(50% - 5px)}
-.r1{border:2px solid rgba(242,163,58,.75);animation:spinA 14s linear infinite}
-.r2{inset:7%;border:1.5px solid rgba(194,86,43,.8);animation:spinB 19s linear infinite}
-.r3{inset:-6%;border:1px dashed rgba(243,234,223,.35);animation:spinC 26s linear infinite}
-.glow{position:absolute;inset:12%;border-radius:50%;background:radial-gradient(circle,rgba(242,163,58,.45),rgba(242,163,58,0) 65%);animation:pulse 4.5s ease-in-out infinite}
-.steam{position:absolute;bottom:18%;width:46px;height:160px;border-radius:50%;background:linear-gradient(to top,rgba(243,234,223,.28),rgba(243,234,223,0));filter:blur(14px);animation:rise 6s ease-in infinite;opacity:0}
-@keyframes spinA{from{transform:rotateX(68deg) rotateZ(0)}to{transform:rotateX(68deg) rotateZ(360deg)}}
-@keyframes spinB{from{transform:rotateY(64deg) rotateZ(0)}to{transform:rotateY(64deg) rotateZ(-360deg)}}
-@keyframes spinC{from{transform:rotateX(-30deg) rotateY(40deg) rotateZ(0)}to{transform:rotateX(-30deg) rotateY(40deg) rotateZ(360deg)}}
-@keyframes pulse{0%,100%{opacity:.55;transform:scale(.96)}50%{opacity:1;transform:scale(1.06)}}
-@keyframes rise{0%{opacity:0;transform:translateY(40px) scaleX(.7)}30%{opacity:1}100%{opacity:0;transform:translateY(-220px) scaleX(1.4)}}
-@media (prefers-reduced-motion:reduce){.r1,.r2,.r3,.glow,.steam{animation:none}}
-</style>
-</head>
-<body>
-<div style="background:#16120e;color:#f3eadf;font-family:Inter,system-ui,sans-serif">
-  <header style="max-width:1280px;margin:0 auto;padding:22px 32px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between">
-    <a href="#top" aria-label="TilksWeb home" style="display:flex;align-items:flex-end;gap:2px">
-      <span style="font-family:Outfit,sans-serif;font-weight:800;font-size:32px;line-height:.8;letter-spacing:-.045em;color:#f3eadf">tilksweb</span>
-      <svg width="13" height="18" viewBox="0 0 20 27" aria-hidden="true" style="margin-bottom:1px"><path d="M10 0C14 7 19 11 19 17A9 9 0 0 1 1 17C1 13 4 10 6 8C6 12 8 13 10 13C9 9 9 4 10 0Z" fill="#f2a33a"/></svg>
-    </a>
-    <nav style="display:flex;flex-wrap:wrap;gap:26px;align-items:center;font-size:15px">
-      <a href="/party/">Free tool</a><a href="#topics">Topics</a><a href="#method">How we test</a><a href="#about">About</a>
-      <a href="#prep" style="background:#f2a33a;color:#16120e;font-weight:600;padding:11px 18px;border-radius:999px">Weekly Prep List</a>
-    </nav>
-  </header>
-
-  <section id="top" style="position:relative;overflow:hidden;border-top:1px solid #33291f;border-bottom:1px solid #33291f;background:radial-gradient(ellipse 65% 80% at 76% 45%,rgba(242,163,58,.34),rgba(22,18,14,0) 70%),radial-gradient(ellipse 50% 60% at 10% 100%,rgba(194,86,43,.18),rgba(22,18,14,0) 70%),#1d1712">
-    <div style="max-width:1280px;margin:0 auto;padding:96px 32px 104px;display:flex;flex-wrap:wrap;gap:56px;align-items:center">
-      <div style="flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:26px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.24em;font-size:15px;color:#f2a33a">FIELD NOTES FROM A WORKING KITCHEN</div>
-        <h1 style="margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(56px,8vw,112px);line-height:.9;letter-spacing:-.01em">AI for real<br>kitchens.</h1>
-        <p style="margin:0;font-size:20px;line-height:1.55;color:#c4b6a4;max-width:560px">Inventory, deliveries, bookings and menus. What AI really saves in a restaurant, tested by a chef on a real line, with the costs and the limits.</p>
-        <div style="display:flex;flex-wrap:wrap;gap:14px">
-          <a href="#topics" style="background:#f2a33a;color:#16120e;font-weight:600;padding:15px 24px;border-radius:999px;font-size:16px">Read the field notes</a>
-          <a href="#prep" style="border:1px solid #4a3d31;padding:15px 24px;border-radius:999px;font-size:16px">Get the Weekly Prep List</a>
-        </div>
-      </div>
-      <figure id="about" style="flex:1 1 360px;margin:0;display:flex;flex-direction:column;align-items:center;gap:18px">
-        <div class="stage">
-          <div class="glow"></div>
-          <div class="ring r3"><i></i></div>
-          <div class="ring r1"><i></i></div>
-          <div class="ring r2"><i></i></div>
-          <img src="/img/portrait.png" alt="The chef behind TilksWeb" style="position:relative;width:66%;aspect-ratio:1;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #f2a33a,0 30px 120px rgba(242,163,58,.35)">
-          <span class="steam" style="left:30%;animation-delay:0s" aria-hidden="true"></span>
-          <span class="steam" style="left:48%;animation-delay:2s" aria-hidden="true"></span>
-          <span class="steam" style="left:64%;animation-delay:4s" aria-hidden="true"></span>
-        </div>
-        <figcaption style="text-align:center;font-size:15px;line-height:1.5;color:#c4b6a4;max-width:340px"><strong style="color:#f3eadf">Rusty · Chef</strong><br>Tests every tool on a real line before writing about it.</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <div style="background:#231c16;border-bottom:1px solid #33291f">
-    <div style="max-width:1280px;margin:0 auto;padding:18px 32px;display:flex;flex-wrap:wrap;gap:12px 34px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:17px;letter-spacing:.16em;color:#a89a8a">
-      <span>INVENTORY</span><span style="color:#c2562b">/</span><span>DELIVERIES</span><span style="color:#c2562b">/</span><span>BOOKINGS</span><span style="color:#c2562b">/</span><span>MENUS</span><span style="color:#c2562b">/</span><span>STAFF</span><span style="color:#c2562b">/</span><span>HACCP</span>
-    </div>
-  </div>
-
-  <section style="max-width:1280px;margin:0 auto;padding:56px 32px 0">
-    <a href="/party/" style="display:flex;flex-wrap:wrap;gap:18px 32px;align-items:center;justify-content:space-between;background:#231c16;border:1px solid #f2a33a;border-radius:20px;padding:28px 32px;color:#f3eadf">
-      <span style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.22em;font-size:14px;color:#f2a33a">FREE TOOL</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:38px;line-height:1">Party Pre-Order Calculator</span><span style="color:#c4b6a4">Paste guest pre-orders, get your prep list and supplier order in seconds.</span></span>
-      <span style="background:#f2a33a;color:#16120e;font-weight:600;padding:14px 22px;border-radius:999px">Open the calculator →</span>
-    </a>
-  </section>
-
-  <div style="background:#f3eadf;color:#1d1712"><section id="topics" style="max-width:1280px;margin:0 auto;padding:96px 32px 96px">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.24em;font-size:15px;color:#a3441f">THE STATIONS</div>
-    <h2 style="margin:12px 0 40px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:56px;line-height:1">Where AI earns its place.</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px">
-      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">01</div>
-        <h3 style="margin:0;font-size:22px">Inventory &amp; food cost</h3>
-        <p style="margin:0;color:#5c4f42;line-height:1.55">Faster counts, live stock levels and plate costs that stay true when prices move.</p>
-      </article>
-      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">02</div>
-        <h3 style="margin:0;font-size:22px">Deliveries &amp; suppliers</h3>
-        <p style="margin:0;color:#5c4f42;line-height:1.55">Smarter orders, price checks across suppliers and invoices checked against what arrived.</p>
-      </article>
-      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">03</div>
-        <h3 style="margin:0;font-size:22px">Bookings &amp; guests</h3>
-        <p style="margin:0;color:#5c4f42;line-height:1.55">Table management, no-shows and knowing how many covers to prep for.</p>
-      </article>
-      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">04</div>
-        <h3 style="margin:0;font-size:22px">Menus &amp; recipes</h3>
-        <p style="margin:0;color:#5c4f42;line-height:1.55">Recipe cards, allergen labels and menu prices that protect the margin.</p>
-      </article>
-      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">05</div>
-        <h3 style="margin:0;font-size:22px">Staff &amp; scheduling</h3>
-        <p style="margin:0;color:#5c4f42;line-height:1.55">Rotas, onboarding and prep instructions new cooks actually follow.</p>
-      </article>
-      <article style="background:#fffaf3;border:1px solid #e2d3c0;border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(29,23,18,.06)">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;color:#a3441f;letter-spacing:.14em;font-size:14px">06</div>
-        <h3 style="margin:0;font-size:22px">HACCP &amp; paperwork</h3>
-        <p style="margin:0;color:#5c4f42;line-height:1.55">Temperature logs, cleaning records and inspections with less admin.</p>
-      </article>
-    </div>
-  </section></div>
-
-  <section id="method" style="max-width:1280px;margin:0 auto;padding:72px 32px">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;border-top:1px solid #3a2f25;padding-top:48px">
-      <div style="display:flex;flex-direction:column;gap:10px"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px">A real kitchen problem.</div><p style="margin:0;color:#b3a594;line-height:1.55">Every piece starts with something that costs time or money on a shift.</p></div>
-      <div style="display:flex;flex-direction:column;gap:10px"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px">Tested, not repeated.</div><p style="margin:0;color:#b3a594;line-height:1.55">We say clearly what we tried ourselves and what we only researched.</p></div>
-      <div style="display:flex;flex-direction:column;gap:10px"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:30px">Costs and limits.</div><p style="margin:0;color:#b3a594;line-height:1.55">Prices, setup time and where the tool falls short. Paid links always disclosed.</p></div>
-    </div>
-  </section>
-
-  <section id="prep" style="background:#231c16;border-top:1px solid #3a2f25;border-bottom:1px solid #3a2f25">
-    <div style="max-width:1280px;margin:0 auto;padding:80px 32px;display:flex;flex-wrap:wrap;gap:40px;align-items:center;justify-content:space-between">
-      <div style="flex:1 1 420px;display:flex;flex-direction:column;gap:12px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.24em;font-size:15px;color:#f2a33a">THE WEEKLY PREP LIST</div>
-        <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:48px;line-height:1">One email. What worked in real kitchens this week.</h2>
-      </div>
-      <form style="flex:1 1 420px;display:flex;flex-direction:column;gap:10px">
-        <label for="email" style="font-size:14px;color:#b3a594">Email address</label>
-        <div style="display:flex;flex-wrap:wrap;gap:10px">
-          <input id="email" type="email" placeholder="you@restaurant.com" style="flex:1 1 220px;background:#16120e;border:1px solid #4a3d31;border-radius:999px;padding:15px 20px;color:#f3eadf;font:inherit;font-size:16px">
-          <button type="button" style="background:#f2a33a;color:#16120e;font:inherit;font-weight:600;font-size:16px;border:0;border-radius:999px;padding:15px 24px">Opening soon</button>
-        </div>
-        <p style="margin:0;font-size:13px;color:#a89a8a">Signups open once the privacy notice and unsubscribe flow are ready.</p>
-      </form>
-    </div>
-  </section>
-
-  <footer style="max-width:1280px;margin:0 auto;padding:36px 32px;display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;font-size:14px;color:#a89a8a">
-    <span>© 2026 tilksweb · Independent AI field notes for hospitality</span>
-    <span style="display:flex;gap:22px"><a href="/editorial.html">Editorial policy</a><a href="/privacy.html">Privacy</a></span>
-  </footer>
-</div>
-</body>
-</html>
+:root{color-scheme:dark;--bg:#0b0e10;--panel:#12171a;--line:#293135;--fg:#f3f5f1;--muted:#aab4b5;--accent:#b7f28b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:inherit;text-decoration:none}a:hover{color:var(--accent)}a:focus-visible{outline:2px solid var(--accent);outline-offset:5px}h1,h2,h3,p{margin:0}h1,h2,h3{line-height:1.08;letter-spacing:-.045em}p{color:var(--muted)}.wrap{max-width:1220px;margin:auto;padding-inline:clamp(22px,5vw,60px)}header{border-bottom:1px solid var(--line)}.nav{display:flex;align-items:center;justify-content:space-between;min-height:84px;gap:24px;flex-wrap:wrap;padding-block:18px}.logo{font-weight:850;font-size:29px;letter-spacing:-.075em;line-height:1}.logo span,.accent{color:var(--accent)}nav{display:flex;gap:clamp(14px,3vw,32px);flex-wrap:wrap;font-size:14px;color:var(--muted)}.hero{overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(ellipse at 85% 42%,#223629 0%,transparent 48%)}.hero-grid{min-height:620px;display:grid;grid-template-columns:1.25fr .75fr;align-items:center;gap:35px;padding-block:96px}.eyebrow{font:600 12px/1.4 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;display:flex;align-items:center;gap:9px}.eyebrow:before{content:"";width:7px;height:7px;background:var(--accent);border-radius:50%;box-shadow:0 0 16px #b7f28b66}h1{font-size:clamp(52px,7.1vw,100px);font-weight:760;max-width:850px}.hero p{max-width:570px;font-size:clamp(17px,2vw,21px);margin:26px 0 34px}.button{display:inline-flex;align-items:center;gap:18px;background:var(--accent);color:#101810;padding:15px 22px;font-weight:700;border-radius:5px}.button:hover{background:#e1ffd0;color:#101810}.art{width:100%;max-width:450px;justify-self:center;filter:drop-shadow(0 0 34px #a5f08b25)}.section{padding-block:90px;border-bottom:1px solid var(--line)}.section-head{display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:35px;margin-bottom:42px}h2{font-size:clamp(36px,5vw,62px);font-weight:720}.section-head p{max-width:470px}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{min-height:230px;background:linear-gradient(135deg,#151c1f,#101416);border:1px solid var(--line);padding:30px;display:flex;flex-direction:column;gap:18px;border-radius:8px}.card-top{display:flex;justify-content:space-between;align-items:center;color:var(--accent);font:600 12px/1.4 system-ui;letter-spacing:.12em}.card h3{font-size:31px;margin-top:auto}.card p{max-width:430px}.mark{width:48px;height:48px;stroke:var(--accent);stroke-width:1.4;fill:none}.status{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}.method{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}.method article{border-top:1px solid var(--line);padding-top:26px}.method h3{font-size:25px;margin:16px 0 10px}.method span{color:var(--accent);font-size:12px;letter-spacing:.12em}.statement{padding-block:95px;display:grid;grid-template-columns:1.3fr .7fr;gap:48px;align-items:center}.statement h2{font-size:clamp(42px,6vw,76px)}footer{border-top:1px solid var(--line);padding-block:35px;color:var(--muted);font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.foot-links{display:flex;gap:20px;flex-wrap:wrap}.skip{position:absolute;left:10px;top:-100px;background:var(--accent);color:#000;padding:10px}.skip:focus{top:10px}@media(max-width:760px){.hero-grid,.section-head,.statement{grid-template-columns:1fr}.hero-grid{padding-block:65px;min-height:auto}.art{max-width:300px}.section{padding-block:60px}.cards,.method{grid-template-columns:1fr}.statement{padding-block:60px}.nav{align-items:flex-start;flex-direction:column}.card{min-height:200px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header><div class="wrap nav"><a class="logo" href="/" aria-label="TILKSWEB home">tilksweb<span>.</span></a><nav aria-label="Main navigation"><a href="#ventures">Ventures</a><a href="#technology">Technology</a><a href="#about">About</a></nav></div></header>
+<main id="main">
+<section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">Independent AI venture studio</div><h1>Building digital businesses <span class="accent">for the AI era.</span></h1><p>We build, operate and grow our own digital ventures through artificial intelligence, automation and technology.</p><a class="button" href="#ventures">Explore our direction <span aria-hidden="true">↗</span></a></div>
+<svg class="art" viewBox="0 0 420 420" role="img" aria-label="Abstract geometric network of connected digital systems"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b7f28b"/><stop offset="1" stop-color="#3c6955"/></linearGradient><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#9bc7a0" stroke-opacity=".09"/></pattern></defs><rect x="10" y="10" width="400" height="400" fill="url(#grid)" rx="12"/><g fill="none" stroke="#769b7e" stroke-opacity=".45"><circle cx="210" cy="210" r="178" stroke-dasharray="2 9"/><circle cx="210" cy="210" r="136"/><circle cx="210" cy="210" r="94"/><path d="M210 32V388M32 210H388M84 84L336 336M336 84L84 336"/></g><g stroke="url(#g)" stroke-width="1.6" fill="#14271c"><path d="M210 75 327 143 327 277 210 345 93 277 93 143Z"/><path d="M210 75 210 210 327 143M93 143 210 210 327 277M93 277 210 210 210 345" fill="none"/><path d="M210 143 268 177 268 244 210 278 152 244 152 177Z" fill="#1f3a29"/><path d="M210 143V210L268 244M152 177 210 210 268 177M210 210V278" fill="none"/></g><g fill="#b7f28b"><circle cx="210" cy="75" r="5"/><circle cx="327" cy="143" r="5"/><circle cx="327" cy="277" r="5"/><circle cx="210" cy="345" r="5"/><circle cx="93" cy="277" r="5"/><circle cx="93" cy="143" r="5"/><circle cx="210" cy="210" r="7"/></g></svg></div></section>
+<section class="section" id="ventures"><div class="wrap"><div class="section-head"><div><div class="eyebrow">Our direction / 01</div><h2>One studio.<br>Multiple possibilities.</h2></div><p>Our first focus is original digital media. Software, digital products and new ventures are longer-term opportunities, developed as we validate the business.</p></div>
+<div class="cards">
+<article class="card"><div class="card-top"><span>01 / MEDIA</span><span class="status">Initial focus</span></div><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="10" width="38" height="28" rx="4"/><path d="m20 17 12 7-12 7Z"/></svg><h3>AI Media</h3><p>Developing original English-language digital media brands, with research-led storytelling and AI-assisted production.</p></article>
+<article class="card"><div class="card-top"><span>02 / SYSTEMS</span><span class="status">In development</span></div><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><rect x="11" y="11" width="26" height="26" rx="4"/><rect x="19" y="19" width="10" height="10"/><path d="M17 3v8m14-8v8M17 37v8m14-8v8M3 17h8m-8 14h8m26-14h8m-8 14h8"/></svg><h3>AI Technology</h3><p>Exploring internal tools for research, intelligent workflows, content production and business operations.</p></article>
+<article class="card"><div class="card-top"><span>03 / PRODUCTS</span><span class="status">Future direction</span></div><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><path d="m24 5 19 10-19 10L5 15ZM5 23l19 10 19-10M5 31l19 10 19-10"/></svg><h3>Digital Products</h3><p>Turning validated problems and practical experience into useful software and digital resources.</p></article>
+<article class="card"><div class="card-top"><span>04 / VENTURES</span><span class="status">Future direction</span></div><svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M7 39h34M10 33l10-11 8 6L41 10M30 10h11v11"/></svg><h3>New Ventures</h3><p>Building a portfolio of independent businesses over time, guided by evidence and sustainable economics.</p></article>
+</div></div></section>
+<section class="section" id="technology"><div class="wrap"><div class="section-head"><div><div class="eyebrow">Our approach / 02</div><h2>Research first.<br>Build with purpose.</h2></div><p>AI is a means to create value, not a substitute for original thinking, evidence or editorial responsibility.</p></div><div class="method"><article><span>01 / DISCOVER</span><h3>Find real demand.</h3><p>Start with research, audience needs and opportunities that can be tested.</p></article><article><span>02 / DEVELOP</span><h3>Build lean systems.</h3><p>Combine AI and automation with careful quality checks and cost control.</p></article><article><span>03 / VALIDATE</span><h3>Grow what works.</h3><p>Measure outcomes before committing more resources or expanding into new markets.</p></article></div></div></section>
+<section id="about"><div class="wrap statement"><div><div class="eyebrow">Our philosophy / 03</div><h2>Build. Automate.<br><span class="accent">Grow. Repeat.</span></h2></div><p>TILKSWEB is an independent venture studio focused on developing its own businesses rather than selling agency services. We are at the early stage of building our media and technology portfolio, with a long-term focus on ownership and practical value.</p></div></section>
+</main><footer><div class="wrap foot"><a class="logo" href="/">tilksweb<span>.</span></a><span>© 2026 TILKSWEB</span><div class="foot-links"><a href="/editorial.html">Editorial policy</a><a href="/privacy.html">Privacy</a></div></div></footer></body></html>
