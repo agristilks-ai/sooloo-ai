@@ -315,3 +315,25 @@ test('legacy draft categories can still be saved', async () => {
   assert.equal(r.status, 200);
   assert.equal((await post(e, {action: 'save', title: 'Bad', category: 'Nope', sourceUrl: '', research: 'r', body: ''})).status, 400);
 });
+
+test('Media OS: authenticated research records and idea pipeline persist without provider calls', async () => {
+  const e=env(), channel='Animated Science', id=crypto.randomUUID(), competitorId=crypto.randomUUID();
+  const empty=await post(e,{action:'media_list'});
+  assert.equal(empty.status,200);assert.equal(empty.data.channels.length,4);
+  const competitor={action:'media_competitor',id:competitorId,channel,name:'Example',url:'https://www.youtube.com/@example',notes:'Research'};
+  assert.equal((await post(e,competitor)).status,200);
+  assert.equal((await post(e,{...competitor,id:crypto.randomUUID(),notes:'Updated'})).status,200);
+  const idea={action:'media_idea',id,channel,title:'Original science explainer',url:'',notes:'Audience question'};
+  assert.equal((await post(e,idea)).status,200);assert.equal((await post(e,idea)).status,200);
+  assert.equal((await post(e,{action:'media_status',id,status:'approved'})).status,200);
+  const list=await post(e,{action:'media_list'});
+  assert.equal(list.data.competitors.length,1);assert.equal(list.data.competitors[0].notes,'Updated');
+  assert.equal(list.data.ideas.length,1);assert.equal(list.data.ideas[0].status,'approved');
+  assert.equal(list.data.channels[0].competitors,1);assert.equal(list.data.channels[0].ideas,1);
+  assert.equal(e.AI.calls.length,0);
+  assert.equal((await post(e,{action:'media_list'},{token:null})).status,401);
+  assert.equal((await post(e,{...idea,channel:'invalid'})).status,400);
+  assert.equal((await post(e,{...competitor,url:'https://evil.test'})).status,400);
+  assert.equal((await post(e,{action:'media_status',id,status:'published'})).status,400);
+  assert.equal((await post(e,{action:'media_status',id:crypto.randomUUID(),status:'approved'})).status,404);
+});
